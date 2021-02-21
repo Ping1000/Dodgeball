@@ -5,8 +5,9 @@ using UnityEngine.AI;
 
 // TODO: add "break" feature to allow people to cancel their actions
 // TODO: integrate with UI stuff to show people what they're planned action is
-// BUG:  sometimes (only saw when testing action list of size 5), actions would
-//       get skipped.
+// BUG:  If there's an issue with the path, a destination might be skipped.
+//       fixed for now by lowering the margins on the navmesh border, not sure
+//       if it happens with overlapping paths so i'll have to test more later
 
 public class ActionController : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class ActionController : MonoBehaviour
         areActionsBuilt = false;
 
         // TESTING
-        SelectCharacter();
+        // SelectCharacter();
     }
 
     // Update is called once per frame
@@ -48,9 +49,6 @@ public class ActionController : MonoBehaviour
             // break out of building actions by calling stopcorouting on building
             // and deleting existing actions (maybe just add a new function to
             // reset the vars and also add to executing actions
-        } else if (Input.GetKeyDown(KeyCode.Space)) {
-            // execute actions on space for now
-            ExecuteActions();
         }
     }
 
@@ -93,9 +91,13 @@ public class ActionController : MonoBehaviour
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Mouse0));
 
         RaycastHit hit;
+        NavMeshHit meshHit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, Mathf.Infinity)) {
             // WILL NEED TO CASE ON WHAT YOU CLICK ON, FOR NOW JUST MOVE
+            //if (NavMesh.SamplePosition(hit.point, out meshHit, 5, 0b0)) {
+            //    actions[currentAction] = new CharacterAction(ActionType.Move, this, _agent, meshHit.position);
+            //}
             actions[currentAction] = new CharacterAction(ActionType.Move, this, _agent, hit.point);
         } else {
             Debug.Log("Missed a valid raycast target");
@@ -111,14 +113,6 @@ public class ActionController : MonoBehaviour
     public void ExecuteActions() {
         if (areActionsBuilt)
             StartCoroutine(ExecutingActions());
-
-        // reset variables when done
-        actions = new CharacterAction[numActions]; // should be garbage collected, right?
-        canBuildActions = false;
-        isBuilding = false;
-        isWaiting = false;
-        isActing = false;
-        areActionsBuilt = false;
     }
 
     [HideInInspector]
@@ -128,10 +122,19 @@ public class ActionController : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     IEnumerator ExecutingActions() {
+        isActing = true;
         foreach (CharacterAction a in actions) {
             a.DoAction();
             yield return new WaitUntil(() => !(a.isActing));
         }
+
+        // reset variables when done
+        actions = new CharacterAction[numActions]; // should be garbage collected, right?
+        canBuildActions = false;
+        isBuilding = false;
+        isWaiting = false;
+        isActing = false;
+        areActionsBuilt = false;
 
     }
 
@@ -139,6 +142,8 @@ public class ActionController : MonoBehaviour
     /// Enables the character to start building actions
     /// </summary>
     public void SelectCharacter() {
+        // do something visually here to indicate which character is active
+        Debug.Log("Active character: " + gameObject.name);
         canBuildActions = true;
     }
 }
