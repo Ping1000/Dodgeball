@@ -10,6 +10,8 @@ public class TeamController : MonoBehaviour
         isPlanning = false;
         isActing = false;
 
+        // Instatiate teams here
+
         // TESTING
         // BeginPlanPhase();
     }
@@ -32,10 +34,14 @@ public class TeamController : MonoBehaviour
     IEnumerator PlanningPhase() {
         isPlanning = true;
         Debug.Log("Beginning planning phase...");
+
+        // TODO allow player to select characters individually 
         foreach (ActionController m in members) {
             m.SelectCharacter();
             yield return new WaitUntil(() => m.areActionsBuilt);
         }
+
+
         Debug.Log("Planning phase complete.");
         isPlanning = false;
     }

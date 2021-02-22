@@ -11,19 +11,34 @@ using UnityEngine.AI;
 
 public class ActionController : MonoBehaviour
 {
-    public uint numActions;
+    public uint numActions; // Number of actions each player can take total
+    public int numActionsSet;// Number of actions that have been set // public for debugging, should probably privatize
     [HideInInspector]
     public bool areActionsBuilt;
 
-    private CharacterAction[] actions;
+    public LayerMask clickableMask; //  Most likely this will be an | of multiple masks
+    public string floorTag;
+    public string teamTag;
+    public string ballTag;
+    public string moveButtonTag;
+    public string throwButtonTag;
+    private ActionType selectedAction;
+    private Queue<CharacterAction> actionsQueue; 
     private bool canBuildActions;
 
     private NavMeshAgent _agent;
+
+    public GameObject debugSpherePrefab;
+    private List<GameObject> debugSpheres;
+
     
+
+    
+
     // Start is called before the first frame update
-    void Start()
+    void Start() // May need to change this to Awake()
     {
-        actions = new CharacterAction[numActions];
+        actionsQueue = new Queue<CharacterAction>();
         _agent = GetComponent<NavMeshAgent>();
 
         canBuildActions = false;
@@ -32,7 +47,11 @@ public class ActionController : MonoBehaviour
         isActing = false;
         areActionsBuilt = false;
 
+        selectedAction = ActionType.Move; // TODO un-hardcode this
+        numActionsSet = 0;
+
         // TESTING
+        debugSpheres = new List<GameObject>();
         // SelectCharacter();
     }
 
@@ -52,6 +71,11 @@ public class ActionController : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        
+    }
+
     private bool isBuilding;
     Coroutine building;
     /// <summary>
@@ -62,9 +86,9 @@ public class ActionController : MonoBehaviour
         isBuilding = true;
         canBuildActions = false;
 
-        for (int i = 0; i < numActions; i++) {
+        for (numActionsSet = 0; numActionsSet < numActions; ) { // i++ removed on purpose, want to allow multiple movement waypoints to be considered one action
             if (waiting == null) {
-                waiting = StartCoroutine(WaitingForInput(i));
+                waiting = StartCoroutine(WaitingForInput(numActionsSet));
                 yield return new WaitUntil(() => !isWaiting);
             } else
                 Debug.LogError("Tried to wait for input while already waiting!");
@@ -91,14 +115,88 @@ public class ActionController : MonoBehaviour
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Mouse0));
 
         RaycastHit hit;
-        NavMeshHit meshHit;
+        //NavMeshHit meshHit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity)) {
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity)) { // TODO append ", clickableMask" so it only checks for collisions on things we can actually click
+
+            // Debugging
+            Debug.DrawRay(ray.origin, ray.direction * 20f, Color.red, 2f);
+            Debug.Log("Hit " + hit.collider.gameObject.name);
+            debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
+            //
+
+            // TODO figure out how to select different actions
+            // With current implementation, it may be easier to do a control panel first...
+
+            // Switch may be unneeded with this:
+            // actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
+            //if (selectedAction == ActionType.Move)
+            //{
+            //    // TODO check distance, if above threshold, set waypoint in the direction of point up to that 
+            //}
+            //numActionsSet++;
+
+            // Maybe able to switch actions using ActionType.Select? 
+            // There's a better way to do this but currently rushed and tired
+            if (hit.collider.CompareTag(moveButtonTag))
+            {
+                selectedAction = ActionType.Move;
+                Debug.Log("Move Button Selected!");
+            }
+            else if (hit.collider.CompareTag(throwButtonTag))
+            {
+                selectedAction = ActionType.Throw;
+                Debug.Log("Throw Button Selected!");
+            }
+            else
+            {
+                switch (selectedAction)
+                {
+                    case ActionType.Move:
+                        if (hit.collider.CompareTag(floorTag))
+                        {
+                            // TODO change this to avoid redundant info
+                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
+
+                            // TODO check distance, if above threshold, set waypoint in the direction of point up to that distance
+                            // then increment num
+                            numActionsSet++;
+                        }
+                        break;
+                    case ActionType.Throw:
+                        if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) // doesn't matter what we click on basically
+                        { //don't care if an enemy is clicked bc clickable mask should've taken care of it
+                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
+                            numActionsSet++;
+                            Debug.Log("Throw!");
+
+                        }
+                        break;
+                    case ActionType.Catch:
+                        if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag))
+                        {
+                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
+                            numActionsSet++;
+                        }
+                        break;
+                    case ActionType.Pass:
+                        if (hit.collider.CompareTag(teamTag))
+                        {
+                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
+                            numActionsSet++;
+                        }
+                        break;
+                    default:
+                        Debug.LogError("Selected Action " + selectedAction + " Not Found");
+                        break;
+                }
+            }
             // WILL NEED TO CASE ON WHAT YOU CLICK ON, FOR NOW JUST MOVE
             //if (NavMesh.SamplePosition(hit.point, out meshHit, 5, 0b0)) {
             //    actions[currentAction] = new CharacterAction(ActionType.Move, this, _agent, meshHit.position);
             //}
-            actions[currentAction] = new CharacterAction(ActionType.Move, this, _agent, hit.point);
+            // actionsQueue[currentAction] = new CharacterAction(ActionType.Move, this, _agent, hit.point);
+
         } else {
             Debug.Log("Missed a valid raycast target");
         }
@@ -123,18 +221,26 @@ public class ActionController : MonoBehaviour
     /// <returns></returns>
     IEnumerator ExecutingActions() {
         isActing = true;
-        foreach (CharacterAction a in actions) {
-            a.DoAction();
-            yield return new WaitUntil(() => !(a.isActing));
+
+        while (actionsQueue.Count > 0)
+        {
+            CharacterAction action = actionsQueue.Dequeue();
+            action.DoAction();
+            yield return new WaitUntil(() => !(action.isActing));
         }
 
         // reset variables when done
-        actions = new CharacterAction[numActions]; // should be garbage collected, right?
+        actionsQueue = new Queue<CharacterAction>(); // should be garbage collected, right? // God I hope so
         canBuildActions = false;
         isBuilding = false;
         isWaiting = false;
         isActing = false;
         areActionsBuilt = false;
+
+        foreach (GameObject obj in debugSpheres)
+        {
+            Destroy(obj);
+        }
 
     }
 
@@ -145,5 +251,11 @@ public class ActionController : MonoBehaviour
         // do something visually here to indicate which character is active
         Debug.Log("Active character: " + gameObject.name);
         canBuildActions = true;
+    }
+
+    //TODO
+    public void PlayerOut(Collision collision)
+    {
+        return;
     }
 }

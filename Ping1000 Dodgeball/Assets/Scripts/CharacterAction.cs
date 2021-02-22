@@ -9,7 +9,8 @@ using UnityEngine.AI;
 public enum ActionType {
     Move,
     Throw,
-    Catch
+    Catch,
+    Pass
 }
 
 public class CharacterAction
@@ -18,6 +19,7 @@ public class CharacterAction
     private NavMeshAgent _agent; // the pathfinding agent
     private MonoBehaviour _mono; // need a MonoBehaviour to run async coroutines
     private Vector3 destPoint; // destination point for movement, throwing, etc
+    public float throwForce = 1000f;
 
     public CharacterAction(ActionType type, MonoBehaviour mono, NavMeshAgent agent, Vector3 destPoint) {
         _type = type;
@@ -68,14 +70,27 @@ public class CharacterAction
     IEnumerator DoMove() {
         isActing = true;
         _agent.SetDestination(destPoint);
-
-        yield return new WaitUntil(() =>
-            Mathf.Approximately(_agent.remainingDistance, _agent.stoppingDistance));
-        
+        // TODO fix this, players ignoring middle waypoint for some reason
+        // or don't bc it might resolve itself with other code implemented
+        yield return new WaitUntil(() => _agent.remainingDistance <=_agent.stoppingDistance);
+        //Debug.Log("Moving complete!");
         isActing = false;
     }
 
     IEnumerator DoThrow() {
+        Debug.Log("Do Throw!");
+        isActing = true;
+        Transform ballTransform = _mono.gameObject.transform.Find("Ball");
+        if (ballTransform != null)
+        {
+            GameObject ball = ballTransform.gameObject;
+            ball.GetComponent<BallController>().ThrowBall(_mono.gameObject, destPoint.normalized, throwForce);
+        }
+        else
+        {
+            Debug.Log("Wasted Throw");
+        }
+        isActing = false;
         yield return null;
     }
 
