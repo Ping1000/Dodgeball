@@ -157,7 +157,7 @@ public class ActionController : MonoBehaviour
                         if (hit.collider.CompareTag(floorTag))
                         {
                             // TODO change this to avoid redundant info
-                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _mover, hit.point));
+                            actionsQueue.Enqueue(new CharacterAction(selectedAction, _mover, hit.point));
 
                             // TODO check distance, if above threshold, set waypoint in the direction of point up to that distance
                             // then increment num
@@ -165,25 +165,24 @@ public class ActionController : MonoBehaviour
                         }
                         break;
                     case ActionType.Throw:
-                        if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) // doesn't matter what we click on basically
+                        // if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) // doesn't matter what we click on basically
                         { //don't care if an enemy is clicked bc clickable mask should've taken care of it
-                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _mover, hit.point));
+                            actionsQueue.Enqueue(new CharacterAction(selectedAction, _mover, hit.point));
                             numActionsSet++;
                             Debug.Log("Throw!");
-
                         }
                         break;
                     case ActionType.Catch:
                         if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag))
                         {
-                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _mover, hit.point));
+                            actionsQueue.Enqueue(new CharacterAction(selectedAction, _mover, hit.point));
                             numActionsSet++;
                         }
                         break;
                     case ActionType.Pass:
                         if (hit.collider.CompareTag(teamTag))
                         {
-                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _mover, hit.point));
+                            actionsQueue.Enqueue(new CharacterAction(selectedAction, _mover, hit.point));
                             numActionsSet++;
                         }
                         break;
@@ -251,8 +250,8 @@ public class ActionController : MonoBehaviour
     }
 
     //TODO
-    public void PlayerOut(Collision collision)
-    {
-        return;
+    public void PlayerOut(Vector3 impactDir) {
+        // game state blah blah blah stuff
+        _mover.GetKnockedOut(impactDir);
     }
 }

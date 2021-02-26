@@ -77,6 +77,14 @@ public class SmoothMovement : MonoBehaviour
         return 1 - Mathf.Abs(Quaternion.Dot(qA, qB)) < acceptableRange;
     }
 
+    public void GetKnockedOut(Vector3 impactDir) {
+        _body.isKinematic = false;
+        _body.constraints = RigidbodyConstraints.None;
+
+        // add some ragdoll stuff with like randomness in the direction? and scaling?
+        _body.AddForce(Vector3.Scale(impactDir, new Vector3(500, 500, 500)));
+    }
+
     // Update is called once per frame
     void Update()
     {
