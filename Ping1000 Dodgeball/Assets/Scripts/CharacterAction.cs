@@ -16,14 +16,12 @@ public class CharacterAction
 {
     private SmoothMovement _mover;
     private ActionType _type;
-    private MonoBehaviour _mono; // need a MonoBehaviour to run async coroutines
     private Vector3 destPoint; // destination point for movement, throwing, etc
     public float throwForce = 500f;
 
-    public CharacterAction(ActionType type, MonoBehaviour mono, SmoothMovement mover, Vector3 destPoint) {
+    public CharacterAction(ActionType type, SmoothMovement mover, Vector3 destPoint) {
         _type = type;
         _mover = mover;
-        _mono = mono;
         this.destPoint = destPoint;
         // do we need additional params / do we need to case on type?
 
@@ -41,21 +39,21 @@ public class CharacterAction
                 if (isActing) {
                     Debug.LogError("Called DoMove while already acting!");
                 } else {
-                    _mono.StartCoroutine(DoMove());
+                    _mover.StartCoroutine(DoMove());
                 }
                 break;
             case ActionType.Throw:
                 if (isActing) {
                     Debug.LogError("Called DoThrow while already acting!");
                 } else {
-                    _mono.StartCoroutine(DoThrow());
+                    _mover.StartCoroutine(DoThrow());
                 }
                 break;
             case ActionType.Catch:
                 if (isActing) {
                     Debug.LogError("Called DoCatch while already acting!");
                 } else {
-                    _mono.StartCoroutine(DoCatch());
+                    _mover.StartCoroutine(DoCatch());
                 }
                 break;
         }
@@ -84,15 +82,13 @@ public class CharacterAction
         _mover.RotateTowards(destPoint);
         yield return new WaitUntil(() => !(_mover.isRotating));
 
-        BallController ball = _mono.gameObject.GetComponentInChildren<BallController>();
+        BallController ball = _mover.gameObject.GetComponentInChildren<BallController>();
         if (ball != null)
         {
-            Vector3 curpos = _mono.transform.position;
-            Vector3 throwPoint = new Vector3(destPoint.x - curpos.x, 0, destPoint.z - curpos.z);
-            Vector3 throwVec = throwPoint.normalized;
-            throwVec.y = .5f;
-            // ball.ThrowBall(_mono.gameObject, destPoint.normalized, throwForce);
-            ball.ThrowBall(_mono.gameObject, throwVec, throwForce);
+            Vector3 curpos = _mover.transform.position;
+            Vector3 throwVec = new Vector3(destPoint.x - curpos.x, 0, destPoint.z - curpos.z);
+            throwVec = throwVec.normalized;
+            ball.ThrowBall(_mover.gameObject, throwVec);
         }
         else
         {

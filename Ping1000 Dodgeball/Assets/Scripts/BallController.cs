@@ -11,6 +11,9 @@ public class BallController : MonoBehaviour
     public Rigidbody _rb;
     public Collider _collider;
 
+    public float throwSpeed;
+    private bool hasBeenThrown;
+    private Vector3 thrownDirection;
 
     public enum BallState
     {
@@ -24,9 +27,23 @@ public class BallController : MonoBehaviour
         currentState = BallState.OnGround;
         _rb = GetComponent<Rigidbody>();
         _collider = GetComponent<Collider>();
+        hasBeenThrown = false;
     }
 
-    public void ThrowBall(GameObject player, Vector3 direction, float magnitude)
+    private void Update() {
+        if (hasBeenThrown) {
+            Move();
+        }
+    }
+
+    private void Move() {
+        if (thrownDirection == null)
+            return;
+
+        transform.position += thrownDirection * throwSpeed * Time.deltaTime;
+    }
+
+    public void ThrowBall(GameObject player, Vector3 direction)
     {
         if (currentState != BallState.IsHeld)
         {
@@ -36,42 +53,45 @@ public class BallController : MonoBehaviour
         thrownBy = player;
 
         // put in ball throwing code here
-        _collider.enabled = true;
-        // _rb.constraints = RigidbodyConstraints.FreezePositionY; // TODO fix throw direction and make this none
-        _rb.constraints = RigidbodyConstraints.None;
         transform.SetParent(null);
-        _rb.AddForce(direction * magnitude);
+        hasBeenThrown = true;
+        thrownDirection = direction.normalized;
+        _collider.enabled = true;
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Ball hit " + collision.gameObject.name);
-        if (collision.gameObject.CompareTag(floorTag)) // Hit the floor
+        // Debug.Log("Ball hit " + other.gameObject.name);
+        if (other.gameObject.CompareTag(floorTag)) // Hit the floor
         {
             currentState = BallState.OnGround;
             thrownBy = null;
         }
         // Maybe handle below in ActionController?
-        else if (currentState == BallState.WasThrown && !collision.gameObject.CompareTag(thrownBy.tag))
-        {
-            if (!collision.gameObject.CompareTag("Dummy"))
-            {
-                collision.gameObject.GetComponent<ActionController>().PlayerOut(collision);
-            }
+        //else if (currentState == BallState.WasThrown && !other.gameObject.CompareTag(thrownBy.tag))
+        //{
+        //    if (!collision.gameObject.CompareTag("Dummy"))
+        //    {
+        //        collision.gameObject.GetComponent<ActionController>().PlayerOut(collision);
+        //    }
             
-        }
+        //}
         else if (currentState == BallState.OnGround)
         {
             Debug.Log("Ball being picked up");
             
             currentState = BallState.IsHeld;
             _collider.enabled = false;
-            _rb.constraints = RigidbodyConstraints.FreezeAll;
-            transform.SetParent(collision.gameObject.GetComponent<Transform>());
-            Vector3 handPosition = collision.gameObject.transform.Find("Hands").position;
+            transform.SetParent(other.gameObject.GetComponent<Transform>());
+            Vector3 handPosition = other.gameObject.transform.Find("Hands").position;
             transform.SetPositionAndRotation(handPosition, Quaternion.identity);
-            
-            
+        }
+        else if (currentState == BallState.WasThrown && !other.gameObject.CompareTag(thrownBy.tag)) {
+            ActionController other_ac = other.gameObject.GetComponent<ActionController>();
+            if (other_ac) {
+                other_ac.PlayerOut(thrownDirection);
+            }
+            Destroy(this.gameObject);
         }
     }
 
