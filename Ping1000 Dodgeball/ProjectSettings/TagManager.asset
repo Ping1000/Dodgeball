@@ -17,6 +17,7 @@ TagManager:
   - Blue Player
   - Red Player
   - Dummy Team
+  - PlayerCamera
   layers:
   - Default
   - TransparentFX
