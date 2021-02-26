@@ -192,10 +192,6 @@ public class ActionController : MonoBehaviour
                 }
             }
             // WILL NEED TO CASE ON WHAT YOU CLICK ON, FOR NOW JUST MOVE
-            //if (NavMesh.SamplePosition(hit.point, out meshHit, 5, 0b0)) {
-            //    actions[currentAction] = new CharacterAction(ActionType.Move, this, _agent, meshHit.position);
-            //}
-            // actionsQueue[currentAction] = new CharacterAction(ActionType.Move, this, _agent, hit.point);
 
         } else {
             Debug.Log("Missed a valid raycast target");

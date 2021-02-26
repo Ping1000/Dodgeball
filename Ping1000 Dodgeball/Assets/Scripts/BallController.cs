@@ -37,7 +37,8 @@ public class BallController : MonoBehaviour
 
         // put in ball throwing code here
         _collider.enabled = true;
-        _rb.constraints = RigidbodyConstraints.FreezePositionY; // TODO fix throw direction and make this none
+        // _rb.constraints = RigidbodyConstraints.FreezePositionY; // TODO fix throw direction and make this none
+        _rb.constraints = RigidbodyConstraints.None;
         transform.SetParent(null);
         _rb.AddForce(direction * magnitude);
     }
