@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 // TODO: add "break" feature to allow people to cancel their actions
 // TODO: integrate with UI stuff to show people what they're planned action is
@@ -13,6 +12,7 @@ using UnityEngine.AI;
 public class ActionController : MonoBehaviour
 {
     public uint numActions; // Number of actions each player can take total
+    [HideInInspector]
     public int numActionsSet;// Number of actions that have been set // public for debugging, should probably privatize
     [HideInInspector]
     public bool areActionsBuilt;
@@ -23,24 +23,27 @@ public class ActionController : MonoBehaviour
     public string ballTag;
     public string moveButtonTag;
     public string throwButtonTag;
+    public Material defaultMaterial;
+    public Material selectedMaterial;
     private ActionType selectedAction;
     private Queue<CharacterAction> actionsQueue; 
     private bool canBuildActions;
 
     private SmoothMovement _mover;
+    private MeshRenderer _renderer;
 
     public GameObject debugSpherePrefab;
     private List<GameObject> debugSpheres;
 
-    
-
-    
+    [SerializeField]
+    private TeamController teamController;
 
     // Start is called before the first frame update
     void Start() // May need to change this to Awake()
     {
         actionsQueue = new Queue<CharacterAction>();
         _mover = GetComponent<SmoothMovement>();
+        _renderer = GetComponent<MeshRenderer>();
 
         canBuildActions = false;
         isBuilding = false;
@@ -53,7 +56,6 @@ public class ActionController : MonoBehaviour
 
         // TESTING
         debugSpheres = new List<GameObject>();
-        // SelectCharacter();
     }
 
     // Update is called once per frame
@@ -98,6 +100,7 @@ public class ActionController : MonoBehaviour
         isBuilding = false;
         building = null;
         areActionsBuilt = true;
+        _renderer.material = defaultMaterial;
         Debug.Log("Actions built.");
     }
 
@@ -123,7 +126,6 @@ public class ActionController : MonoBehaviour
             // Debugging
             Debug.DrawRay(ray.origin, ray.direction * 20f, Color.red, 2f);
             Debug.Log("Hit " + hit.collider.gameObject.name);
-            debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
             //
 
             // TODO figure out how to select different actions
@@ -156,6 +158,7 @@ public class ActionController : MonoBehaviour
                     case ActionType.Move:
                         if (hit.collider.CompareTag(floorTag))
                         {
+                            debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
                             // TODO change this to avoid redundant info
                             actionsQueue.Enqueue(new CharacterAction(selectedAction, _mover, hit.point));
 
@@ -167,6 +170,7 @@ public class ActionController : MonoBehaviour
                     case ActionType.Throw:
                         // if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) // doesn't matter what we click on basically
                         { //don't care if an enemy is clicked bc clickable mask should've taken care of it
+                            debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
                             actionsQueue.Enqueue(new CharacterAction(selectedAction, _mover, hit.point));
                             numActionsSet++;
                             Debug.Log("Throw!");
@@ -246,6 +250,7 @@ public class ActionController : MonoBehaviour
     public void SelectCharacter() {
         // do something visually here to indicate which character is active
         Debug.Log("Active character: " + gameObject.name);
+        _renderer.material = selectedMaterial;
         canBuildActions = true;
     }
 
@@ -253,5 +258,6 @@ public class ActionController : MonoBehaviour
     public void PlayerOut(Vector3 impactDir) {
         // game state blah blah blah stuff
         _mover.GetKnockedOut(impactDir);
+        teamController.members.Remove(this);
     }
 }

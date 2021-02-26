@@ -11,18 +11,15 @@ public class TeamController : MonoBehaviour
         isActing = false;
 
         // Instatiate teams here
-
-        // TESTING
-        // BeginPlanPhase();
     }
 
     void Update() {
         // TESTING
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            BeginPlanPhase();
-        } else if (Input.GetKeyDown(KeyCode.Return)) {
-            BeginActionPhase();
-        }
+        //if (Input.GetKeyDown(KeyCode.Space)) {
+        //    BeginPlanPhase();
+        //} else if (Input.GetKeyDown(KeyCode.Return)) {
+        //    BeginActionPhase();
+        //}
     }
 
     public void BeginPlanPhase() {
@@ -37,8 +34,10 @@ public class TeamController : MonoBehaviour
 
         // TODO allow player to select characters individually 
         foreach (ActionController m in members) {
-            m.SelectCharacter();
-            yield return new WaitUntil(() => m.areActionsBuilt);
+            if (m != null) {
+                m.SelectCharacter();
+                yield return new WaitUntil(() => m.areActionsBuilt);
+            }
         }
 
 
