@@ -6,6 +6,7 @@ public class PhaseController : MonoBehaviour
 {
     public TeamController redTeam;
     public TeamController blueTeam;
+    public TextManager _txt;
 
     public int maxBalls;
     public List<BallController> balls;
@@ -23,6 +24,8 @@ public class PhaseController : MonoBehaviour
         isPlayingRound = false;
         canPlayRound = true;
         RespawnBalls();
+        _txt.redText.text = "Red: " + redTeam.members.Count;
+        _txt.blueText.text = "Blue: " + blueTeam.members.Count;
     }
 
     // Update is called once per frame
@@ -37,12 +40,14 @@ public class PhaseController : MonoBehaviour
         isPlayingRound = true;
 
         // plan phase
+        _txt.phaseText.text = "Current Phase: Planning";
         redTeam.BeginPlanPhase();
-        blueTeam.BeginPlanPhase();
         yield return new WaitUntil(() => !(redTeam.isPlanning));
+        blueTeam.BeginPlanPhase();
         yield return new WaitUntil(() => !(blueTeam.isPlanning));
 
         // action phase
+        _txt.phaseText.text = "Current Phase: Action";
         redTeam.BeginActionPhase();
         blueTeam.BeginActionPhase();
         yield return new WaitUntil(() => !(redTeam.isActing));
@@ -50,6 +55,8 @@ public class PhaseController : MonoBehaviour
 
         int redCount = redTeam.members.Count;
         int blueCount = blueTeam.members.Count;
+        _txt.redText.text = "Red: " + redCount;
+        _txt.blueText.text = "Blue: " + blueCount;
         if (redCount == 0 && blueCount == 0) {
             // draw
             Debug.Log("Draw");

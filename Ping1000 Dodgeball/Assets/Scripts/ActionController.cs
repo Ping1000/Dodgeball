@@ -31,6 +31,7 @@ public class ActionController : MonoBehaviour
 
     private SmoothMovement _mover;
     private MeshRenderer _renderer;
+    private TextManager _txt;
 
     public GameObject debugSpherePrefab;
     private List<GameObject> debugSpheres;
@@ -44,6 +45,7 @@ public class ActionController : MonoBehaviour
         actionsQueue = new Queue<CharacterAction>();
         _mover = GetComponent<SmoothMovement>();
         _renderer = GetComponent<MeshRenderer>();
+        _txt = FindObjectOfType<TextManager>();
 
         canBuildActions = false;
         isBuilding = false;
@@ -144,12 +146,14 @@ public class ActionController : MonoBehaviour
             if (hit.collider.CompareTag(moveButtonTag))
             {
                 selectedAction = ActionType.Move;
-                Debug.Log("Move Button Selected!");
+                // Debug.Log("Move Button Selected!");
+                _txt.actionText.text = "Selected Action: Move";
             }
             else if (hit.collider.CompareTag(throwButtonTag))
             {
                 selectedAction = ActionType.Throw;
-                Debug.Log("Throw Button Selected!");
+                // Debug.Log("Throw Button Selected!");
+                _txt.actionText.text = "Selected Action: Throw";
             }
             else
             {
@@ -249,8 +253,19 @@ public class ActionController : MonoBehaviour
     /// </summary>
     public void SelectCharacter() {
         // do something visually here to indicate which character is active
-        Debug.Log("Active character: " + gameObject.name);
+        // Debug.Log("Active character: " + gameObject.name);
         _renderer.material = selectedMaterial;
+        switch (selectedAction) {
+            case ActionType.Move:
+                _txt.actionText.text = "Selected Action: Move";
+                break;
+            case ActionType.Throw:
+                _txt.actionText.text = "Selected Action: Throw";
+                break;
+            default:
+                _txt.actionText.text = "Seleted Action: N/A";
+                break;
+        }
         canBuildActions = true;
     }
 
