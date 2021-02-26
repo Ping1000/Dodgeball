@@ -15,6 +15,8 @@ public class BallController : MonoBehaviour
     private bool hasBeenThrown;
     private Vector3 thrownDirection;
 
+    private List<BallController> ballList;
+
     public enum BallState
     {
         OnGround,
@@ -28,6 +30,8 @@ public class BallController : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _collider = GetComponent<Collider>();
         hasBeenThrown = false;
+        ballList = FindObjectOfType<PhaseController>().balls;
+        // ballList.Add(this);
     }
 
     private void Update() {
@@ -57,6 +61,9 @@ public class BallController : MonoBehaviour
         hasBeenThrown = true;
         thrownDirection = direction.normalized;
         _collider.enabled = true;
+
+        ballList.Remove(this);
+        Destroy(this.gameObject, 7);
     }
 
     void OnTriggerEnter(Collider other)
@@ -78,6 +85,8 @@ public class BallController : MonoBehaviour
         //}
         else if (currentState == BallState.OnGround)
         {
+            if (other.gameObject.GetComponentInChildren<BallController>())
+                return;
             Debug.Log("Ball being picked up");
             
             currentState = BallState.IsHeld;
@@ -91,6 +100,7 @@ public class BallController : MonoBehaviour
             if (other_ac) {
                 other_ac.PlayerOut(thrownDirection);
             }
+            ballList.Remove(this);
             Destroy(this.gameObject);
         }
     }
