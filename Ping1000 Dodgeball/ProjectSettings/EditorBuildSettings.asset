@@ -5,7 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ClickMovement.unity
     guid: e7741ef00162d134fb23d8d6d5395b52
+  - enabled: 0
+    path: Assets/Scenes/MultiplayerTest.unity
+    guid: 656d31a818f04ba47b92c47e80e73839
+  - enabled: 1
+    path: Assets/Scenes/PhotonTest.unity
+    guid: 3ff4b2ffa9ae99340a6b08d0b4aaacaa
+  - enabled: 1
+    path: Assets/Scenes/LevelTest.unity
+    guid: fa3c2e18059b2a145a82d988fc68f5fe
   m_configObjects: {}

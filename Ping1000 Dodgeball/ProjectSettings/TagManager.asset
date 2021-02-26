@@ -11,6 +11,12 @@ TagManager:
   - Throw Button
   - Ball
   - Dummy
+  - Blue Floor
+  - Red Floor
+  - Blue Team
+  - Blue Player
+  - Red Player
+  - Dummy Team
   layers:
   - Default
   - TransparentFX

@@ -77,6 +77,7 @@ public class SmoothMovement : MonoBehaviour
         return 1 - Mathf.Abs(Quaternion.Dot(qA, qB)) < acceptableRange;
     }
 
+    // Probably need to make this an RPC
     public void GetKnockedOut(Vector3 impactDir) {
         _body.isKinematic = false;
         _body.constraints = RigidbodyConstraints.None;
