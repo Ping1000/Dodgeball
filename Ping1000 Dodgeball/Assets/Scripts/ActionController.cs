@@ -9,6 +9,7 @@ using UnityEngine.AI;
 //       fixed for now by lowering the margins on the navmesh border, not sure
 //       if it happens with overlapping paths so i'll have to test more later
 
+[RequireComponent(typeof(SmoothMovement))]
 public class ActionController : MonoBehaviour
 {
     public uint numActions; // Number of actions each player can take total
@@ -26,7 +27,7 @@ public class ActionController : MonoBehaviour
     private Queue<CharacterAction> actionsQueue; 
     private bool canBuildActions;
 
-    private NavMeshAgent _agent;
+    private SmoothMovement _mover;
 
     public GameObject debugSpherePrefab;
     private List<GameObject> debugSpheres;
@@ -39,7 +40,7 @@ public class ActionController : MonoBehaviour
     void Start() // May need to change this to Awake()
     {
         actionsQueue = new Queue<CharacterAction>();
-        _agent = GetComponent<NavMeshAgent>();
+        _mover = GetComponent<SmoothMovement>();
 
         canBuildActions = false;
         isBuilding = false;
@@ -156,7 +157,7 @@ public class ActionController : MonoBehaviour
                         if (hit.collider.CompareTag(floorTag))
                         {
                             // TODO change this to avoid redundant info
-                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
+                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _mover, hit.point));
 
                             // TODO check distance, if above threshold, set waypoint in the direction of point up to that distance
                             // then increment num
@@ -166,7 +167,7 @@ public class ActionController : MonoBehaviour
                     case ActionType.Throw:
                         if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) // doesn't matter what we click on basically
                         { //don't care if an enemy is clicked bc clickable mask should've taken care of it
-                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
+                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _mover, hit.point));
                             numActionsSet++;
                             Debug.Log("Throw!");
 
@@ -175,14 +176,14 @@ public class ActionController : MonoBehaviour
                     case ActionType.Catch:
                         if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag))
                         {
-                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
+                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _mover, hit.point));
                             numActionsSet++;
                         }
                         break;
                     case ActionType.Pass:
                         if (hit.collider.CompareTag(teamTag))
                         {
-                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
+                            actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _mover, hit.point));
                             numActionsSet++;
                         }
                         break;
@@ -192,10 +193,6 @@ public class ActionController : MonoBehaviour
                 }
             }
             // WILL NEED TO CASE ON WHAT YOU CLICK ON, FOR NOW JUST MOVE
-            //if (NavMesh.SamplePosition(hit.point, out meshHit, 5, 0b0)) {
-            //    actions[currentAction] = new CharacterAction(ActionType.Move, this, _agent, meshHit.position);
-            //}
-            // actionsQueue[currentAction] = new CharacterAction(ActionType.Move, this, _agent, hit.point);
 
         } else {
             Debug.Log("Missed a valid raycast target");
