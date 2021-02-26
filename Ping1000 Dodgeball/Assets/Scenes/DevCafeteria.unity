@@ -138,6 +138,11 @@ PrefabInstance:
       propertyPath: tcontroller
       value: 
       objectReference: {fileID: 120570583}
+    - target: {fileID: 6972834823642458964, guid: a6d57eac04be2d748901dbc20c391154,
+        type: 3}
+      propertyPath: teamController
+      value: 
+      objectReference: {fileID: 120570583}
     - target: {fileID: 6972834823642458967, guid: a6d57eac04be2d748901dbc20c391154,
         type: 3}
       propertyPath: m_RootOrder
@@ -344,6 +349,7 @@ MonoBehaviour:
   - {fileID: 1165648607}
   - {fileID: 484650970}
   - {fileID: 1138291196}
+  finishedActing: 0
   isPlanning: 0
   isActing: 0
 --- !u!1 &173558943
@@ -422,6 +428,11 @@ PrefabInstance:
     - target: {fileID: 6972834823642458964, guid: a6d57eac04be2d748901dbc20c391154,
         type: 3}
       propertyPath: tcontroller
+      value: 
+      objectReference: {fileID: 120570583}
+    - target: {fileID: 6972834823642458964, guid: a6d57eac04be2d748901dbc20c391154,
+        type: 3}
+      propertyPath: teamController
       value: 
       objectReference: {fileID: 120570583}
     - target: {fileID: 6972834823642458967, guid: a6d57eac04be2d748901dbc20c391154,
@@ -1042,6 +1053,7 @@ MonoBehaviour:
   - {fileID: 2054616286}
   - {fileID: 1911677901}
   - {fileID: 1564389493}
+  finishedActing: 0
   isPlanning: 0
   isActing: 0
 --- !u!4 &1167756619
@@ -2151,6 +2163,11 @@ PrefabInstance:
     - target: {fileID: 6972834823642458964, guid: a6d57eac04be2d748901dbc20c391154,
         type: 3}
       propertyPath: tcontroller
+      value: 
+      objectReference: {fileID: 120570583}
+    - target: {fileID: 6972834823642458964, guid: a6d57eac04be2d748901dbc20c391154,
+        type: 3}
+      propertyPath: teamController
       value: 
       objectReference: {fileID: 120570583}
     - target: {fileID: 6972834823642458967, guid: a6d57eac04be2d748901dbc20c391154,

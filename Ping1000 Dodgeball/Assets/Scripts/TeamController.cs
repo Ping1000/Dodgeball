@@ -5,6 +5,8 @@ using UnityEngine;
 public class TeamController : MonoBehaviour
 {
     public List<ActionController> members;
+    [HideInInspector]
+    public int finishedActing;
 
     void Start() {
         isPlanning = false;
@@ -56,11 +58,13 @@ public class TeamController : MonoBehaviour
         foreach (ActionController m in members) {
             m.ExecuteActions();
         }
+        finishedActing = 0;
         yield return new WaitForEndOfFrame();
         // surely there's a better way to manage this
-        foreach (ActionController m in members) {
-            yield return new WaitUntil(() => !(m.isActing));
-        }
+        //foreach (ActionController m in members) {
+        //    yield return new WaitUntil(() => !(m.isActing));
+        //}
+        yield return new WaitUntil(() => finishedActing >= members.Count);
         Debug.Log("Action phase complete.");
         isActing = false;
     }

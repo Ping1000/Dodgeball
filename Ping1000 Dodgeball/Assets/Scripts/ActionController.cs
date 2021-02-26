@@ -245,7 +245,7 @@ public class ActionController : MonoBehaviour
         {
             Destroy(obj);
         }
-
+        teamController.finishedActing++;
     }
 
     /// <summary>
