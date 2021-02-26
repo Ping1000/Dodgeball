@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/ClickMovement.unity
+    guid: e7741ef00162d134fb23d8d6d5395b52
   m_configObjects: {}
