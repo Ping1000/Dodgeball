@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 /// <summary>
 /// Enum type dictating the type of action for this object
@@ -15,15 +14,15 @@ public enum ActionType {
 
 public class CharacterAction
 {
+    private SmoothMovement _mover;
     private ActionType _type;
-    private NavMeshAgent _agent; // the pathfinding agent
     private MonoBehaviour _mono; // need a MonoBehaviour to run async coroutines
     private Vector3 destPoint; // destination point for movement, throwing, etc
     public float throwForce = 500f;
 
-    public CharacterAction(ActionType type, MonoBehaviour mono, NavMeshAgent agent, Vector3 destPoint) {
+    public CharacterAction(ActionType type, MonoBehaviour mono, SmoothMovement mover, Vector3 destPoint) {
         _type = type;
-        _agent = agent;
+        _mover = mover;
         _mono = mono;
         this.destPoint = destPoint;
         // do we need additional params / do we need to case on type?
@@ -69,20 +68,22 @@ public class CharacterAction
     /// <returns></returns>
     IEnumerator DoMove() {
         isActing = true;
-        _agent.SetDestination(destPoint);
+        _mover.MoveTo(destPoint);
         // TODO fix this, players ignoring middle waypoint for some reason
         // or don't bc it might resolve itself with other code implemented
-        yield return new WaitUntil(() => _agent.remainingDistance <=_agent.stoppingDistance);
+        yield return new WaitUntil(() => !(_mover.isMoving));
         // yield return new WaitUntil(() => Vector3.Distance(_agent.transform.position, _agent.destination) <= _agent.stoppingDistance);
         // Debug.Log("Moving complete!");
-        Debug.Log(_agent.destination);
-        _agent.ResetPath();
         isActing = false;
     }
 
     IEnumerator DoThrow() {
         Debug.Log("Do Throw!");
         isActing = true;
+
+        _mover.RotateTowards(destPoint);
+        yield return new WaitUntil(() => !(_mover.isRotating));
+
         BallController ball = _mono.gameObject.GetComponentInChildren<BallController>();
         if (ball != null)
         {
@@ -97,7 +98,6 @@ public class CharacterAction
         {
             Debug.Log("Wasted Throw");
         }
-        _agent.ResetPath();
         isActing = false;
         yield return null;
     }
