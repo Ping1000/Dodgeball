@@ -45,4 +45,10 @@ MonoBehaviour:
   - TaggedPlayer
   - RpcBeginActionPhase
   - RpcBeginPlanPhase
+  - SetBlue
+  - SetPhase
+  - SetRed
+  - SetActing
+  - SetPlanning
+  - PhaseAnnounce
   DisableAutoOpenWizard: 1
