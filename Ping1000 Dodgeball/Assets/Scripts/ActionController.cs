@@ -9,11 +9,10 @@ using UnityEngine;
 //       if it happens with overlapping paths so i'll have to test more later
 
 [RequireComponent(typeof(SmoothMovement))]
-public class ActionController : MonoBehaviour
-{
+public class ActionController : MonoBehaviour {
     public uint numActions; // Number of actions each player can take total
     [HideInInspector]
-    public int numActionsSet;// Number of actions that have been set // public for debugging, should probably privatize
+    public int numActionsSet { get; private set; } // Number of actions that have been set // public for debugging, should probably privatize
     [HideInInspector]
     public bool areActionsBuilt;
 
@@ -32,9 +31,10 @@ public class ActionController : MonoBehaviour
     private SmoothMovement _mover;
     private MeshRenderer _renderer;
     private TextManager _txt;
+    private LineController _lines;
 
-    public GameObject debugSpherePrefab;
-    private List<GameObject> debugSpheres;
+    // public GameObject debugSpherePrefab;
+    // private List<GameObject> debugSpheres;
 
     [SerializeField]
     private TeamController teamController;
@@ -45,6 +45,7 @@ public class ActionController : MonoBehaviour
         actionsQueue = new Queue<CharacterAction>();
         _mover = GetComponent<SmoothMovement>();
         _renderer = GetComponent<MeshRenderer>();
+        _lines = GetComponent<LineController>();
         _txt = FindObjectOfType<TextManager>();
 
         canBuildActions = false;
@@ -57,7 +58,7 @@ public class ActionController : MonoBehaviour
         numActionsSet = 0;
 
         // TESTING
-        debugSpheres = new List<GameObject>();
+        // debugSpheres = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -99,6 +100,7 @@ public class ActionController : MonoBehaviour
                 Debug.LogError("Tried to wait for input while already waiting!");
         }
 
+        _lines.ClearLines(); // move to after executing? after doing all teams? idk
         isBuilding = false;
         building = null;
         areActionsBuilt = true;
@@ -116,6 +118,12 @@ public class ActionController : MonoBehaviour
     /// <returns></returns>
     IEnumerator WaitingForInput(int currentAction) {
         isWaiting = true;
+
+        if (selectedAction == ActionType.Move) {
+            _lines.StartTrackingMove();
+        } else if (selectedAction == ActionType.Throw) {
+            _lines.StartTrackingThrow();
+        }
 
         yield return new WaitForEndOfFrame();
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Mouse0));
@@ -162,7 +170,7 @@ public class ActionController : MonoBehaviour
                     case ActionType.Move:
                         if (hit.collider.CompareTag(floorTag))
                         {
-                            debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
+                            // debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
                             // TODO change this to avoid redundant info
                             actionsQueue.Enqueue(new CharacterAction(selectedAction, _mover, hit.point));
 
@@ -174,7 +182,7 @@ public class ActionController : MonoBehaviour
                     case ActionType.Throw:
                         // if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) // doesn't matter what we click on basically
                         { //don't care if an enemy is clicked bc clickable mask should've taken care of it
-                            debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
+                            // debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
                             actionsQueue.Enqueue(new CharacterAction(selectedAction, _mover, hit.point));
                             numActionsSet++;
                             Debug.Log("Throw!");
@@ -199,8 +207,6 @@ public class ActionController : MonoBehaviour
                         break;
                 }
             }
-            // WILL NEED TO CASE ON WHAT YOU CLICK ON, FOR NOW JUST MOVE
-
         } else {
             Debug.Log("Missed a valid raycast target");
         }
@@ -241,10 +247,10 @@ public class ActionController : MonoBehaviour
         isActing = false;
         areActionsBuilt = false;
 
-        foreach (GameObject obj in debugSpheres)
-        {
-            Destroy(obj);
-        }
+        //foreach (GameObject obj in debugSpheres)
+        //{
+        //    Destroy(obj);
+        //}
         teamController.finishedActing++;
     }
 
