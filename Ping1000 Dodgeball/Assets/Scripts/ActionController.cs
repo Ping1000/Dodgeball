@@ -158,10 +158,12 @@ public class ActionController : MonoBehaviour {
                     selectedAction = ActionType.Move;
                     // Debug.Log("Move Button Selected!");
                     _txt.actionText.text = "Selected Action: Move";
+                    SFXManager.PlayNewSound(soundType.button);
                 } else if (hit.collider.CompareTag(throwButtonTag)) {
                     selectedAction = ActionType.Throw;
                     // Debug.Log("Throw Button Selected!");
                     _txt.actionText.text = "Selected Action: Throw";
+                    SFXManager.PlayNewSound(soundType.button);
                 } else {
                     switch (selectedAction) {
                         case ActionType.Move:
@@ -200,6 +202,7 @@ public class ActionController : MonoBehaviour {
                             Debug.LogError("Selected Action " + selectedAction + " Not Found");
                             break;
                     }
+                    SFXManager.PlayNewSound(soundType.action);
                 }
             } else {
                 Debug.Log("Missed a valid raycast target");
@@ -281,6 +284,7 @@ public class ActionController : MonoBehaviour {
     //TODO
     public void PlayerOut(Vector3 impactDir) {
         // game state blah blah blah stuff
+        SFXManager.PlayNewSound(soundType.impact);
         _mover.GetKnockedOut(impactDir);
         teamController.members.Remove(this);
     }

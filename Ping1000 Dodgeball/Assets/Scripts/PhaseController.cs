@@ -18,6 +18,7 @@ public class PhaseController : MonoBehaviour
     private Transform ballSpawnB;
 
     private bool canPlayRound;
+    public float ballTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -27,12 +28,15 @@ public class PhaseController : MonoBehaviour
         RespawnBalls();
         _txt.redText.text = "Red: " + redTeam.members.Count;
         _txt.blueText.text = "Blue: " + blueTeam.members.Count;
+        ballTimer = 0;
     }
 
     // Update is called once per frame
     void Update() {
         if (canPlayRound && !isPlayingRound)
             StartCoroutine(PlayingRound());
+        if (ballTimer > 0)
+            ballTimer -= Time.deltaTime;
     }
 
     [HideInInspector]
@@ -53,6 +57,7 @@ public class PhaseController : MonoBehaviour
         blueTeam.BeginActionPhase();
         yield return new WaitUntil(() => !(redTeam.isActing));
         yield return new WaitUntil(() => !(blueTeam.isActing));
+        yield return new WaitUntil(() => ballTimer <= 0);
 
         int redCount = redTeam.members.Count;
         int blueCount = blueTeam.members.Count;

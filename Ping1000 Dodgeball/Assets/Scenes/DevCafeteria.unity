@@ -749,6 +749,7 @@ GameObject:
   - component: {fileID: 918502472}
   - component: {fileID: 918502471}
   - component: {fileID: 918502470}
+  - component: {fileID: 918502474}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -776,6 +777,7 @@ MonoBehaviour:
   balls: []
   ballSpawnA: {fileID: 460142244}
   ballSpawnB: {fileID: 173558944}
+  ballTimer: 0
   isPlayingRound: 0
 --- !u!4 &918502466
 Transform:
@@ -824,7 +826,7 @@ MonoBehaviour:
   lb_src: {fileID: 918502469}
   wm_src: {fileID: 918502470}
   lm_src: {fileID: 918502473}
-  maxVolume: 0.8
+  maxVolume: 0.5
   fadeTime: 2.5
 --- !u!82 &918502469
 AudioSource:
@@ -836,7 +838,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 5b7e6e9cfdc0fff41a5ffe82d1da8f87, type: 3}
+  m_audioClip: {fileID: 8300000, guid: b0fdc536579fa6247ae7de01a3090be9, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0
   m_Pitch: 1
@@ -932,7 +934,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: ef6e5c85a47eda9429ec1e9990e99267, type: 3}
+  m_audioClip: {fileID: 8300000, guid: d29efef895095aa4f9296aa6e8eb1b8a, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0
   m_Pitch: 1
@@ -1028,7 +1030,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 52cfc1e1b394ceb439f6ff4d218d40b5, type: 3}
+  m_audioClip: {fileID: 8300000, guid: d616bfb1fe8e9e54d821f408bf5712aa, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0
   m_Pitch: 1
@@ -1124,7 +1126,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 48515f6cc87a4ce4cbbdbe8953a9bd80, type: 3}
+  m_audioClip: {fileID: 8300000, guid: f61ad140ffecc7545ba4679a1ce65840, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0
   m_Pitch: 1
@@ -1220,7 +1222,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: b8705099b22a8e249bea1339b536ff79, type: 3}
+  m_audioClip: {fileID: 8300000, guid: d3e7ad9e791fb144681489542ff990f5, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0
   m_Pitch: 1
@@ -1306,6 +1308,30 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &918502474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918502464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f73859ba4d17ed54bba21aa17342a4bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  throwSounds:
+  - {fileID: 8300000, guid: cd707669fe3b2ea4a813a1d4e7aebfa8, type: 3}
+  - {fileID: 8300000, guid: 3351bed92776971478ba5cc72beafc4c, type: 3}
+  impactSounds:
+  - {fileID: 8300000, guid: e1edc40cc0c054943b2fd2e5b4177b87, type: 3}
+  - {fileID: 8300000, guid: da22a3fd4594f7944bc6dcf03c89de9e, type: 3}
+  - {fileID: 8300000, guid: 869cc0606e4c35b47990c5dd7ecea49a, type: 3}
+  buttonSounds:
+  - {fileID: 8300000, guid: b1db70d18b6fe6a4e8ea452cc8505e6f, type: 3}
+  actionSounds:
+  - {fileID: 8300000, guid: 24da05b05a6422f4fbfe2a34e152bbe9, type: 3}
+  moveSounds: []
 --- !u!1 &953313391
 GameObject:
   m_ObjectHideFlags: 0

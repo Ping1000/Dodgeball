@@ -46,6 +46,7 @@ public class CharacterAction
                 if (isActing) {
                     Debug.LogError("Called DoThrow while already acting!");
                 } else {
+                    SFXManager.PlayNewSound(soundType.ballThrow);
                     _mover.StartCoroutine(DoThrow());
                 }
                 break;

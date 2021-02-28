@@ -11,6 +11,9 @@ public class BallController : MonoBehaviour
     public Rigidbody _rb;
     public Collider _collider;
 
+    private PhaseController _pc;
+    private float lifeSpan;
+
     public float throwSpeed;
     private bool hasBeenThrown;
     private Vector3 thrownDirection;
@@ -31,7 +34,9 @@ public class BallController : MonoBehaviour
         _collider = GetComponent<Collider>();
         hasBeenThrown = false;
         ballList = FindObjectOfType<PhaseController>().balls;
+        _pc = FindObjectOfType<PhaseController>();
         // ballList.Add(this);
+        lifeSpan = 3;
     }
 
     private void Update() {
@@ -63,7 +68,8 @@ public class BallController : MonoBehaviour
         _collider.enabled = true;
 
         ballList.Remove(this);
-        Destroy(this.gameObject, 7);
+        _pc.ballTimer = Mathf.Clamp(_pc.ballTimer + lifeSpan, 0, lifeSpan);
+        Destroy(this.gameObject, lifeSpan);
     }
 
     void OnTriggerEnter(Collider other)
