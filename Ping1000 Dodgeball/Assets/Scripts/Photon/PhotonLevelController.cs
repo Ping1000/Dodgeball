@@ -60,15 +60,33 @@ public class PhotonLevelController : MonoBehaviour
             
             //phase = true;
             photonView.RPC(nameof(SetPhase), PhotonTargets.AllBuffered);
-            GameObject phaseControllerObject = PhotonNetwork.Instantiate(phaseControllerPrefab.name, Vector3.zero, Quaternion.identity, 0);
-            PhotonPhaseController phaseController = phaseControllerObject.GetComponent<PhotonPhaseController>();
-            phaseController.redTeam = GameObject.FindGameObjectWithTag("Red Team").GetComponent<PhotonTeamController>();
-            phaseController.blueTeam = GameObject.FindGameObjectWithTag("Blue Team").GetComponent<PhotonTeamController>();
+           
+            //GameObject phaseControllerObject = PhotonNetwork.Instantiate(phaseControllerPrefab.name, Vector3.zero, Quaternion.identity, 0);
+            photonView.RPC(nameof(RpcBuildPhaseController), PhotonTargets.AllBuffered);
             //phaseController._txt = GameObject.Find("Text").GetComponent<TextManager>();
             photonView.RPC(nameof(PhaseAnnounce), PhotonTargets.AllBuffered);
 
         }
     }
+    [PunRPC]
+    void RpcBuildPhaseController()
+    {
+        GameObject phaseControllerObject = GameObject.FindGameObjectWithTag("Phase Controller");
+        if (phaseControllerObject == null)
+        {
+            Debug.Log("Instantiating Phase Controller");
+            phaseControllerObject = PhotonNetwork.Instantiate(phaseControllerPrefab.name, Vector3.zero, Quaternion.identity, 0);
+        }
+        PhotonPhaseController phaseController = phaseControllerObject.GetComponent<PhotonPhaseController>();
+        phaseController.redTeam = GameObject.FindGameObjectWithTag("Red Team").GetComponent<PhotonTeamController>();
+        phaseController.blueTeam = GameObject.FindGameObjectWithTag("Blue Team").GetComponent<PhotonTeamController>();
+    }
+    /*void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        PhotonPhaseController phaseController = info.photonView.gameObject.GetComponent<PhotonPhaseController>();
+        phaseController.redTeam = GameObject.FindGameObjectWithTag("Red Team").GetComponent<PhotonTeamController>();
+        phaseController.blueTeam = GameObject.FindGameObjectWithTag("Blue Team").GetComponent<PhotonTeamController>();
+    }*/
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.isWriting)

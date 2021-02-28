@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AppID: 40346d8d-fd69-49e8-9efe-c4ee53fb9da7
   VoiceAppID: 
-  ChatAppID: 
+  ChatAppID: 40346d8d-fd69-49e8-9efe-c4ee53fb9da7
   HostType: 1
-  PreferredRegion: 0
+  PreferredRegion: 1
   EnabledRegions: -1
-  Protocol: 0
+  Protocol: 4
   ServerAddress: 
   ServerPort: 5055
   VoiceServerPort: 5055
@@ -29,26 +29,23 @@ MonoBehaviour:
   RunInBackground: 1
   RpcList:
   - Chat
-  - ColorRpc
   - DestroyRpc
-  - DoJump
-  - Flash
   - InstantiateRpc
-  - Marco
+  - PhaseAnnounce
   - PickupItemInit
-  - Polo
   - PunPickup
   - PunPickupSimple
   - PunRespawn
   - RequestForPickupItems
   - RequestForPickupTimes
-  - TaggedPlayer
   - RpcBeginActionPhase
   - RpcBeginPlanPhase
+  - SetActing
   - SetBlue
   - SetPhase
-  - SetRed
-  - SetActing
   - SetPlanning
-  - PhaseAnnounce
+  - SetRed
+  - RpcPlayingRound
+  - RpcBallAnnounce
+  - RpcBuildPhaseController
   DisableAutoOpenWizard: 1

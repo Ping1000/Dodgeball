@@ -18,6 +18,7 @@ TagManager:
   - Red Player
   - Dummy Team
   - PlayerCamera
+  - Phase Controller
   layers:
   - Default
   - TransparentFX

@@ -5,9 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(PhotonView))]
 public class PhotonPhaseController : MonoBehaviour
 {
-    [HideInInspector]
+   
     public PhotonTeamController redTeam;
-    [HideInInspector]
+
     public PhotonTeamController blueTeam;
     [HideInInspector]
     public TextManager _txt;
@@ -45,9 +45,17 @@ public class PhotonPhaseController : MonoBehaviour
 
         if (canPlayRound && !isPlayingRound && redTeam != null && blueTeam != null)
         {
+            //photonView.RPC(nameof(RpcPlayingRound), PhotonTargets.AllBuffered);
             StartCoroutine(PlayingRound());
         }
 
+    }
+
+    [PunRPC]
+    void RpcPlayingRound()
+    {
+        Debug.Log("Net ID starting play: " + photonView.viewID);
+        StartCoroutine(PlayingRound());
     }
 
     // Don't use these RPC's I think
@@ -74,12 +82,12 @@ public class PhotonPhaseController : MonoBehaviour
         blueTeam.BeginActionPhase();
     }
 
-    [HideInInspector]
+   
     public bool isPlayingRound;
     IEnumerator PlayingRound()
     {
         isPlayingRound = true;
-
+        Debug.Log("Playing Round, is controller? " + photonView.isMine);
         // plan phase
         //photonView.RPC(nameof(RpcBeginPlanPhase), PhotonTargets.AllBuffered);
         //RpcBeginPlanPhase();
@@ -134,6 +142,7 @@ public class PhotonPhaseController : MonoBehaviour
 
     void RespawnBalls()
     {
+        int numSpawned = 0;
         while (balls.Count < maxBalls)
         { // TODO add avoidance to spawn so they don't stack on eachother as much
           //GameObject newBall = (GameObject)Instantiate(Resources.Load("Prefabs/Ball"));
@@ -143,9 +152,17 @@ public class PhotonPhaseController : MonoBehaviour
                 Random.Range(ballSpawnA.position.z, ballSpawnB.position.z));
             GameObject newBall = PhotonNetwork.Instantiate(ballPrefab.name, newBallPos, Quaternion.identity, 0);
             balls.Add(newBall.GetComponent<PhotonBallController>());
+            numSpawned++;
 
             
         }
+        Debug.Log(numSpawned + " Balls spawned");
+    }
+
+    [PunRPC]
+    void RpcBallAnnounce()
+    {
+        Debug.Log("Balls are spawned");
     }
 
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

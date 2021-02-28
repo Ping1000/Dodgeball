@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 637916074140505266}
   m_Layer: 0
   m_Name: Photon Phase Controller
-  m_TagString: Untagged
+  m_TagString: Phase Controller
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49,7 +49,7 @@ MonoBehaviour:
   group: 0
   OwnerShipWasTransfered: 0
   prefixBackup: -1
-  synchronization: 3
+  synchronization: 1
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
   ownershipTransfer: 0
