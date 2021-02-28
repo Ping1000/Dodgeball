@@ -112,6 +112,7 @@ public class PhotonLevelController : MonoBehaviour
     void PhaseAnnounce()
     {
         Debug.Log("Phase Controller Built");
+        //Debug.Log("Phase is controlled by me? ");
     }
 
 
