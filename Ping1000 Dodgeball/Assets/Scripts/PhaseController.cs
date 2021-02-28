@@ -7,6 +7,7 @@ public class PhaseController : MonoBehaviour
     public TeamController redTeam;
     public TeamController blueTeam;
     public TextManager _txt;
+    public MusicManager _music;
 
     public int maxBalls;
     public List<BallController> balls;
@@ -74,6 +75,7 @@ public class PhaseController : MonoBehaviour
         // do other stuff (music, camera, etc)
         // delay?
         // respawn balls
+        _music.UpdateSounds(redCount, blueCount);
         RespawnBalls();
         isPlayingRound = false;
     }
