@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3276839255378296593}
   - component: {fileID: 6664722034640582436}
   - component: {fileID: 1375873125424620412}
+  - component: {fileID: 4040201115154467789}
   m_Layer: 0
   m_Name: dummy
   m_TagString: Dummy
@@ -143,7 +144,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numActions: 0
-  numActionsSet: 0
   areActionsBuilt: 0
   clickableMask:
     serializedVersion: 2
@@ -155,11 +155,22 @@ MonoBehaviour:
   throwButtonTag: Throw Button
   defaultMaterial: {fileID: 2100000, guid: dbc53db955e88bb4dba37605ead1f4f7, type: 2}
   selectedMaterial: {fileID: 2100000, guid: 855a00e4020ed0043a25f95292e34d98, type: 2}
-  debugSpherePrefab: {fileID: 9023900599211689855, guid: 20854c02cdc7da941a1d1e6d9fb4168a,
-    type: 3}
   teamController: {fileID: 0}
   isWaiting: 0
   isActing: 0
+--- !u!114 &4040201115154467789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3276839255378296592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9565938235b7d346809e35e1a3b3b20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  throwDistanceLength: 5
 --- !u!1 &7823713382979392520
 GameObject:
   m_ObjectHideFlags: 0
