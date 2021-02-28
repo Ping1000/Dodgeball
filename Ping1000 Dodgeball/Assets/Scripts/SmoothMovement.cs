@@ -82,6 +82,8 @@ public class SmoothMovement : MonoBehaviour
         _body.isKinematic = false;
         _body.constraints = RigidbodyConstraints.None;
 
+        impactDir.y = 1;
+
         // add some ragdoll stuff with like randomness in the direction? and scaling?
         _body.AddForce(Vector3.Scale(impactDir, new Vector3(500, 500, 500)));
         Destroy(this.gameObject, 5); // FIX THIS TO WAIT UNTIL AFTER ACTING IS FINISHED
