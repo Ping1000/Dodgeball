@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class TextManager : MonoBehaviour
 {
-    public Text actionText;
     public Text phaseText;
     public Text redText;
     public Text blueText;

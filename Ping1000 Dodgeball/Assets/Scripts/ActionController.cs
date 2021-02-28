@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 // TODO: add "break" feature to allow people to cancel their actions
 // TODO: integrate with UI stuff to show people what they're planned action is
@@ -24,7 +25,8 @@ public class ActionController : MonoBehaviour {
     public string throwButtonTag;
     public Material defaultMaterial;
     public Material selectedMaterial;
-    private ActionType selectedAction;
+    [HideInInspector]
+    public ActionType selectedAction;
     private LinkedList<CharacterAction> actionsList; 
     private bool canBuildActions;
 
@@ -96,8 +98,10 @@ public class ActionController : MonoBehaviour {
             if (waiting == null) {
                 waiting = StartCoroutine(WaitingForInput(numActionsSet));
                 yield return new WaitUntil(() => !isWaiting);
-            } else
+            } else {
                 Debug.LogError("Tried to wait for input while already waiting!");
+                break;
+            }
         }
 
         _lines.ClearLines(); // move to after executing? after doing all teams? idk
@@ -110,7 +114,8 @@ public class ActionController : MonoBehaviour {
 
     [HideInInspector]
     public bool isWaiting;
-    Coroutine waiting;
+    [HideInInspector]
+    public Coroutine waiting;
     /// <summary>
     /// Coroutine for waiting for input for the action
     /// </summary>
@@ -157,34 +162,29 @@ public class ActionController : MonoBehaviour {
                 if (hit.collider.CompareTag(moveButtonTag)) {
                     selectedAction = ActionType.Move;
                     // Debug.Log("Move Button Selected!");
-                    _txt.actionText.text = "Selected Action: Move";
+                    // _txt.actionText.text = "Selected Action: Move";
                     SFXManager.PlayNewSound(soundType.button);
                 } else if (hit.collider.CompareTag(throwButtonTag)) {
                     selectedAction = ActionType.Throw;
                     // Debug.Log("Throw Button Selected!");
-                    _txt.actionText.text = "Selected Action: Throw";
+                    //_txt.actionText.text = "Selected Action: Throw";
                     SFXManager.PlayNewSound(soundType.button);
                 } else {
                     switch (selectedAction) {
                         case ActionType.Move:
                             if (hit.collider.CompareTag(floorTag)) {
-                                // debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
-                                // TODO change this to avoid redundant info
                                 actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
 
-                                // TODO check distance, if above threshold, set waypoint in the direction of point up to that distance
-                                // then increment num
+                                SFXManager.PlayNewSound(soundType.action);
                                 numActionsSet++;
                             }
                             break;
                         case ActionType.Throw:
-                            // if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) // doesn't matter what we click on basically
-                            { //don't care if an enemy is clicked bc clickable mask should've taken care of it
-                              // debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
-                            actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
-                            numActionsSet++;
-                            Debug.Log("Throw!");
-                        }
+                            if (hit.collider.gameObject.layer == 8) {
+                                actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
+                                SFXManager.PlayNewSound(soundType.action);
+                                numActionsSet++;
+                            }
                         break;
                         case ActionType.Catch:
                             if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) {
@@ -202,7 +202,6 @@ public class ActionController : MonoBehaviour {
                             Debug.LogError("Selected Action " + selectedAction + " Not Found");
                             break;
                     }
-                    SFXManager.PlayNewSound(soundType.action);
                 }
             } else {
                 Debug.Log("Missed a valid raycast target");
@@ -269,13 +268,13 @@ public class ActionController : MonoBehaviour {
         _renderer.material = selectedMaterial;
         switch (selectedAction) {
             case ActionType.Move:
-                _txt.actionText.text = "Selected Action: Move";
+                // _txt.actionText.text = "Selected Action: Move";
                 break;
             case ActionType.Throw:
-                _txt.actionText.text = "Selected Action: Throw";
+                // _txt.actionText.text = "Selected Action: Throw";
                 break;
             default:
-                _txt.actionText.text = "Seleted Action: N/A";
+                // _txt.actionText.text = "Seleted Action: N/A";
                 break;
         }
         canBuildActions = true;
