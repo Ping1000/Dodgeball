@@ -8,6 +8,7 @@ using UnityEngine.UI;
 /// </summary>
 public class LineController : MonoBehaviour
 {
+    private Stack<Vector3> savedStarts;
     private Stack<LineRenderer> lines;
     private ActionController ac;
     private Vector3 startPoint;
@@ -17,6 +18,7 @@ public class LineController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        savedStarts = new Stack<Vector3>();
         lines = new Stack<LineRenderer>();
         ac = GetComponent<ActionController>();
         startPoint = transform.position; // will need to reset when the planning ends
@@ -28,12 +30,20 @@ public class LineController : MonoBehaviour
         
     }
 
+    public void ClearRecentLine() {
+        if (lines.Count > 0) {
+            Destroy(lines.Pop().gameObject);
+            startPoint = savedStarts.Pop();
+        }
+    }
+
     /// <summary>
     /// Deletes all stored lines
     /// </summary>
     public void ClearLines() {
         while (lines.Count > 0) {
             Destroy(lines.Pop().gameObject);
+            savedStarts.Pop();
         }
     }
 
@@ -74,6 +84,7 @@ public class LineController : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         if (ac.numActionsSet > oldActionsSet) {
+            savedStarts.Push(startPoint);
             lines.Push(line);
             if (hitPoint != Vector3.zero)
                 startPoint = hitPoint;
@@ -92,6 +103,11 @@ public class LineController : MonoBehaviour
         StartCoroutine(TrackingThrow(newLine.GetComponent<LineRenderer>()));
     }
 
+    /// <summary>
+    /// Coroutine for handling mouse tracking for throwing. Draws line only up to a certain distance
+    /// </summary>
+    /// <param name="line"></param>
+    /// <returns></returns>
     IEnumerator TrackingThrow(LineRenderer line) {
         line.positionCount = 2;
         line.SetPosition(0, startPoint);
@@ -120,6 +136,7 @@ public class LineController : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         if (ac.numActionsSet > oldActionsSet) {
+            savedStarts.Push(startPoint);
             lines.Push(line);
             // shouldn't update start point for throws
         } else {

@@ -25,7 +25,7 @@ public class ActionController : MonoBehaviour {
     public Material defaultMaterial;
     public Material selectedMaterial;
     private ActionType selectedAction;
-    private Queue<CharacterAction> actionsQueue; 
+    private LinkedList<CharacterAction> actionsList; 
     private bool canBuildActions;
 
     private SmoothMovement _mover;
@@ -42,7 +42,7 @@ public class ActionController : MonoBehaviour {
     // Start is called before the first frame update
     void Start() // May need to change this to Awake()
     {
-        actionsQueue = new Queue<CharacterAction>();
+        actionsList = new LinkedList<CharacterAction>();
         _mover = GetComponent<SmoothMovement>();
         _renderer = GetComponent<MeshRenderer>();
         _lines = GetComponent<LineController>();
@@ -126,93 +126,95 @@ public class ActionController : MonoBehaviour {
         }
 
         yield return new WaitForEndOfFrame();
-        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Mouse0));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Backspace));
 
-        RaycastHit hit;
-        //NavMeshHit meshHit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity)) { // TODO append ", clickableMask" so it only checks for collisions on things we can actually click
+        if (Input.GetKeyDown(KeyCode.Backspace)) {
+            UndoMove();
+        } else {
 
-            // Debugging
-            Debug.DrawRay(ray.origin, ray.direction * 20f, Color.red, 2f);
-            Debug.Log("Hit " + hit.collider.gameObject.name);
-            //
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity)) { // TODO append ", clickableMask" so it only checks for collisions on things we can actually click
 
-            // TODO figure out how to select different actions
-            // With current implementation, it may be easier to do a control panel first...
+                // Debugging
+                Debug.DrawRay(ray.origin, ray.direction * 20f, Color.red, 2f);
+                Debug.Log("Hit " + hit.collider.gameObject.name);
+                //
 
-            // Switch may be unneeded with this:
-            // actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
-            //if (selectedAction == ActionType.Move)
-            //{
-            //    // TODO check distance, if above threshold, set waypoint in the direction of point up to that 
-            //}
-            //numActionsSet++;
+                // TODO figure out how to select different actions
+                // With current implementation, it may be easier to do a control panel first...
 
-            // Maybe able to switch actions using ActionType.Select? 
-            // There's a better way to do this but currently rushed and tired
-            if (hit.collider.CompareTag(moveButtonTag))
-            {
-                selectedAction = ActionType.Move;
-                // Debug.Log("Move Button Selected!");
-                _txt.actionText.text = "Selected Action: Move";
-            }
-            else if (hit.collider.CompareTag(throwButtonTag))
-            {
-                selectedAction = ActionType.Throw;
-                // Debug.Log("Throw Button Selected!");
-                _txt.actionText.text = "Selected Action: Throw";
-            }
-            else
-            {
-                switch (selectedAction)
-                {
-                    case ActionType.Move:
-                        if (hit.collider.CompareTag(floorTag))
-                        {
-                            // debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
-                            // TODO change this to avoid redundant info
-                            actionsQueue.Enqueue(new CharacterAction(selectedAction, _mover, hit.point));
+                // Switch may be unneeded with this:
+                // actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
+                //if (selectedAction == ActionType.Move)
+                //{
+                //    // TODO check distance, if above threshold, set waypoint in the direction of point up to that 
+                //}
+                //numActionsSet++;
 
-                            // TODO check distance, if above threshold, set waypoint in the direction of point up to that distance
-                            // then increment num
-                            numActionsSet++;
-                        }
-                        break;
-                    case ActionType.Throw:
-                        // if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) // doesn't matter what we click on basically
-                        { //don't care if an enemy is clicked bc clickable mask should've taken care of it
-                            // debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
-                            actionsQueue.Enqueue(new CharacterAction(selectedAction, _mover, hit.point));
+                // Maybe able to switch actions using ActionType.Select? 
+                // There's a better way to do this but currently rushed and tired
+                if (hit.collider.CompareTag(moveButtonTag)) {
+                    selectedAction = ActionType.Move;
+                    // Debug.Log("Move Button Selected!");
+                    _txt.actionText.text = "Selected Action: Move";
+                } else if (hit.collider.CompareTag(throwButtonTag)) {
+                    selectedAction = ActionType.Throw;
+                    // Debug.Log("Throw Button Selected!");
+                    _txt.actionText.text = "Selected Action: Throw";
+                } else {
+                    switch (selectedAction) {
+                        case ActionType.Move:
+                            if (hit.collider.CompareTag(floorTag)) {
+                                // debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
+                                // TODO change this to avoid redundant info
+                                actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
+
+                                // TODO check distance, if above threshold, set waypoint in the direction of point up to that distance
+                                // then increment num
+                                numActionsSet++;
+                            }
+                            break;
+                        case ActionType.Throw:
+                            // if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) // doesn't matter what we click on basically
+                            { //don't care if an enemy is clicked bc clickable mask should've taken care of it
+                              // debugSpheres.Add(Instantiate(debugSpherePrefab, hit.point, Quaternion.identity));
+                            actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
                             numActionsSet++;
                             Debug.Log("Throw!");
                         }
                         break;
-                    case ActionType.Catch:
-                        if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag))
-                        {
-                            actionsQueue.Enqueue(new CharacterAction(selectedAction, _mover, hit.point));
-                            numActionsSet++;
-                        }
-                        break;
-                    case ActionType.Pass:
-                        if (hit.collider.CompareTag(teamTag))
-                        {
-                            actionsQueue.Enqueue(new CharacterAction(selectedAction, _mover, hit.point));
-                            numActionsSet++;
-                        }
-                        break;
-                    default:
-                        Debug.LogError("Selected Action " + selectedAction + " Not Found");
-                        break;
+                        case ActionType.Catch:
+                            if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) {
+                                actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
+                                numActionsSet++;
+                            }
+                            break;
+                        case ActionType.Pass:
+                            if (hit.collider.CompareTag(teamTag)) {
+                                actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
+                                numActionsSet++;
+                            }
+                            break;
+                        default:
+                            Debug.LogError("Selected Action " + selectedAction + " Not Found");
+                            break;
+                    }
                 }
+            } else {
+                Debug.Log("Missed a valid raycast target");
             }
-        } else {
-            Debug.Log("Missed a valid raycast target");
         }
-
         isWaiting = false;
         waiting = null;
+    }
+
+    void UndoMove() {
+        if (actionsList.Count > 0) {
+            actionsList.RemoveLast();
+            numActionsSet--;
+            _lines.ClearRecentLine();
+        }
     }
 
     /// <summary>
@@ -232,15 +234,16 @@ public class ActionController : MonoBehaviour {
     IEnumerator ExecutingActions() {
         isActing = true;
 
-        while (actionsQueue.Count > 0)
+        while (actionsList.Count > 0)
         {
-            CharacterAction action = actionsQueue.Dequeue();
+            CharacterAction action = actionsList.First.Value;
             action.DoAction();
             yield return new WaitUntil(() => !(action.isActing));
+            actionsList.RemoveFirst();
         }
 
         // reset variables when done
-        actionsQueue = new Queue<CharacterAction>(); // should be garbage collected, right? // God I hope so
+        actionsList = new LinkedList<CharacterAction>(); // should be garbage collected, right? // God I hope so
         canBuildActions = false;
         isBuilding = false;
         isWaiting = false;
