@@ -38,14 +38,14 @@ MonoBehaviour:
   - PunRespawn
   - RequestForPickupItems
   - RequestForPickupTimes
+  - RpcBallAnnounce
   - RpcBeginActionPhase
   - RpcBeginPlanPhase
+  - RpcBuildPhaseController
+  - RpcPlayingRound
   - SetActing
   - SetBlue
   - SetPhase
   - SetPlanning
   - SetRed
-  - RpcPlayingRound
-  - RpcBallAnnounce
-  - RpcBuildPhaseController
   DisableAutoOpenWizard: 1
