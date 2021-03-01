@@ -36,6 +36,8 @@ public class ActionController : MonoBehaviour {
     private TextManager _txt;
     private LineController _lines;
 
+    private Animator _animController;
+
     // public GameObject debugSpherePrefab;
     // private List<GameObject> debugSpheres;
 
@@ -51,6 +53,9 @@ public class ActionController : MonoBehaviour {
         _skinnedRenderer = GetComponent<SkinnedMeshRenderer>();
         _lines = GetComponent<LineController>();
         _txt = FindObjectOfType<TextManager>();
+        _animController = GetComponent<Animator>();
+        
+
 
         canBuildActions = false;
         isBuilding = false;
@@ -182,11 +187,11 @@ public class ActionController : MonoBehaviour {
                             }
                             break;
                         case ActionType.Throw:
-                            if (hit.collider.gameObject.layer == 8) {
-                                actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
-                                SFXManager.PlayNewSound(soundType.action);
-                                numActionsSet++;
-                            }
+                            
+                            actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
+                            SFXManager.PlayNewSound(soundType.action);
+                            numActionsSet++;
+                            
                         break;
                         case ActionType.Catch:
                             if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) {
@@ -241,8 +246,24 @@ public class ActionController : MonoBehaviour {
         while (actionsList.Count > 0)
         {
             CharacterAction action = actionsList.First.Value;
+            if (action.GetActionType() == ActionType.Move)
+            {
+                _animController.SetBool("isRunning", true);
+            }
+            else if (action.GetActionType() == ActionType.Throw)
+            {
+                _animController.SetBool("isThrowing", true);
+            }
             action.DoAction();
             yield return new WaitUntil(() => !(action.isActing));
+            if (action.GetActionType() == ActionType.Move)
+            {
+                _animController.SetBool("isRunning", false);
+            }
+            else if (action.GetActionType() == ActionType.Throw)
+            {
+                _animController.SetBool("isThrowing", false);
+            }
             actionsList.RemoveFirst();
         }
 

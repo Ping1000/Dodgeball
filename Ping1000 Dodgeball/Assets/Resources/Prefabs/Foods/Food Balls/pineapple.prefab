@@ -100,7 +100,7 @@ MonoBehaviour:
   floorTag: 
   _rb: {fileID: 0}
   _collider: {fileID: 0}
-  throwSpeed: 0
+  throwSpeed: 6
 --- !u!135 &7957748802813696177
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -74,7 +74,7 @@ public class BallController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        // Debug.Log("Ball hit " + other.gameObject.name);
+        Debug.Log("Ball hit " + other.gameObject.name);
         /*if (other.gameObject.CompareTag(floorTag)) // Hit the floor
         {
             currentState = BallState.OnGround;
@@ -89,12 +89,12 @@ public class BallController : MonoBehaviour
         //    }
             
         //}
-        if (currentState == BallState.OnGround && (other.gameObject.CompareTag("Red Team") || other.gameObject.CompareTag("Blue Team")))
+        if (currentState == BallState.OnGround && (other.gameObject.CompareTag("Red Player") || other.gameObject.CompareTag("Blue Player")))
         {
-            /*if (other.gameObject.GetComponentInChildren<BallController>())
-                return;*/
+            if (other.gameObject.GetComponentInChildren<BallController>())
+                return;
             //if (other.gameObject.CompareTag("Red Team") || other.gameObject.CompareTag("Blue Team")) { return; }
-            
+
             Debug.Log(this.name + " being picked up by " + gameObject.name);
             
             currentState = BallState.IsHeld;

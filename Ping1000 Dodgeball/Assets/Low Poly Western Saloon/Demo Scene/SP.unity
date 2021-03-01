@@ -3258,7 +3258,7 @@ PrefabInstance:
     - target: {fileID: 3291272393448211081, guid: f0a66eda027c51e4b9cbb25c71a793ad,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.581
+      value: -2.64
       objectReference: {fileID: 0}
     - target: {fileID: 3291272393448211081, guid: f0a66eda027c51e4b9cbb25c71a793ad,
         type: 3}
@@ -3305,6 +3305,21 @@ PrefabInstance:
       propertyPath: floorTag
       value: Blue Floor
       objectReference: {fileID: 0}
+    - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: teamController
+      value: 
+      objectReference: {fileID: 859193551}
+    - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: defaultMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: bf9850d7602b95a43b1f9cc7fb10a1ec, type: 2}
+    - target: {fileID: 5308446542752621945, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: bf9850d7602b95a43b1f9cc7fb10a1ec, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0a66eda027c51e4b9cbb25c71a793ad, type: 3}
 --- !u!1001 &486290112
@@ -3459,7 +3474,7 @@ PrefabInstance:
     - target: {fileID: 3291272393448211081, guid: f0a66eda027c51e4b9cbb25c71a793ad,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.76
+      value: -1.679
       objectReference: {fileID: 0}
     - target: {fileID: 3291272393448211081, guid: f0a66eda027c51e4b9cbb25c71a793ad,
         type: 3}
@@ -3496,6 +3511,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: teamController
+      value: 
+      objectReference: {fileID: 457835891}
+    - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: defaultMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: b846fb84097abd749b6c666265a699f5, type: 2}
+    - target: {fileID: 5308446542752621945, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b846fb84097abd749b6c666265a699f5, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0a66eda027c51e4b9cbb25c71a793ad, type: 3}
 --- !u!114 &515413270 stripped
@@ -6239,6 +6269,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: teamController
+      value: 
+      objectReference: {fileID: 457835891}
+    - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: defaultMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 1a2358b9713491f46acd6dedb8361d5f, type: 2}
+    - target: {fileID: 5308446542752621945, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 1a2358b9713491f46acd6dedb8361d5f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0a66eda027c51e4b9cbb25c71a793ad, type: 3}
 --- !u!1001 &989186908
@@ -21041,7 +21086,7 @@ PrefabInstance:
     - target: {fileID: 3291272393448211081, guid: f0a66eda027c51e4b9cbb25c71a793ad,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.606
+      value: -2.778
       objectReference: {fileID: 0}
     - target: {fileID: 3291272393448211081, guid: f0a66eda027c51e4b9cbb25c71a793ad,
         type: 3}
@@ -21078,6 +21123,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: teamController
+      value: 
+      objectReference: {fileID: 457835891}
+    - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: defaultMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 41bd6a20cb3450942a1611dcd35ca01c, type: 2}
+    - target: {fileID: 5308446542752621945, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 41bd6a20cb3450942a1611dcd35ca01c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0a66eda027c51e4b9cbb25c71a793ad, type: 3}
 --- !u!4 &1701662159 stripped
@@ -22596,7 +22656,7 @@ PrefabInstance:
     - target: {fileID: 3291272393448211081, guid: f0a66eda027c51e4b9cbb25c71a793ad,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.877
+      value: -1.654
       objectReference: {fileID: 0}
     - target: {fileID: 3291272393448211081, guid: f0a66eda027c51e4b9cbb25c71a793ad,
         type: 3}
@@ -22648,6 +22708,16 @@ PrefabInstance:
       propertyPath: floorTag
       value: Blue Floor
       objectReference: {fileID: 0}
+    - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: teamController
+      value: 
+      objectReference: {fileID: 859193551}
+    - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: defaultMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 12b7e30e2428eb24a9bd343696d5559b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0a66eda027c51e4b9cbb25c71a793ad, type: 3}
 --- !u!1 &1892216529
@@ -26819,7 +26889,7 @@ PrefabInstance:
     - target: {fileID: 3291272393448211081, guid: f0a66eda027c51e4b9cbb25c71a793ad,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.719
+      value: -3.722
       objectReference: {fileID: 0}
     - target: {fileID: 3291272393448211081, guid: f0a66eda027c51e4b9cbb25c71a793ad,
         type: 3}
@@ -26870,6 +26940,26 @@ PrefabInstance:
         type: 3}
       propertyPath: floorTag
       value: Blue Floor
+      objectReference: {fileID: 0}
+    - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: teamController
+      value: 
+      objectReference: {fileID: 859193551}
+    - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: defaultMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: d78360fb797bebf4598a796b562bffa2, type: 2}
+    - target: {fileID: 5308446542752621945, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d78360fb797bebf4598a796b562bffa2, type: 2}
+    - target: {fileID: 6428640651711074502, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0a66eda027c51e4b9cbb25c71a793ad, type: 3}

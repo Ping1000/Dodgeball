@@ -129,4 +129,4 @@ MonoBehaviour:
   floorTag: Floor
   _rb: {fileID: 0}
   _collider: {fileID: 0}
-  throwSpeed: 3
+  throwSpeed: 6

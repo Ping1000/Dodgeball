@@ -28,6 +28,10 @@ public class CharacterAction
         isActing = false;
     }
 
+    public ActionType GetActionType()
+    {
+        return _type;
+    }
     // invoke coroutine and have a bool for isActing
     /// <summary>
     /// Invoke the appropriate coroutine according to the action type.

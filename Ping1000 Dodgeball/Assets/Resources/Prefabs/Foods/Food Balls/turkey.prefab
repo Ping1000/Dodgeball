@@ -46,7 +46,7 @@ MonoBehaviour:
   floorTag: Floor
   _rb: {fileID: 0}
   _collider: {fileID: 0}
-  throwSpeed: 3
+  throwSpeed: 6
 --- !u!1001 &7169788155050311467
 PrefabInstance:
   m_ObjectHideFlags: 0
