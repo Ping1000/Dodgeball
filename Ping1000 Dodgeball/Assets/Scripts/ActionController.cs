@@ -31,7 +31,8 @@ public class ActionController : MonoBehaviour {
     private bool canBuildActions;
 
     private SmoothMovement _mover;
-    private MeshRenderer _renderer;
+    //private MeshRenderer _renderer;
+    private SkinnedMeshRenderer _skinnedRenderer;
     private TextManager _txt;
     private LineController _lines;
 
@@ -46,7 +47,8 @@ public class ActionController : MonoBehaviour {
     {
         actionsList = new LinkedList<CharacterAction>();
         _mover = GetComponent<SmoothMovement>();
-        _renderer = GetComponent<MeshRenderer>();
+        //_renderer = GetComponent<MeshRenderer>();
+        _skinnedRenderer = GetComponent<SkinnedMeshRenderer>();
         _lines = GetComponent<LineController>();
         _txt = FindObjectOfType<TextManager>();
 
@@ -108,7 +110,7 @@ public class ActionController : MonoBehaviour {
         isBuilding = false;
         building = null;
         areActionsBuilt = true;
-        _renderer.material = defaultMaterial;
+        _skinnedRenderer.material = defaultMaterial;
         Debug.Log("Actions built.");
     }
 
@@ -265,7 +267,7 @@ public class ActionController : MonoBehaviour {
     public void SelectCharacter() {
         // do something visually here to indicate which character is active
         // Debug.Log("Active character: " + gameObject.name);
-        _renderer.material = selectedMaterial;
+        _skinnedRenderer.material = selectedMaterial;
         switch (selectedAction) {
             case ActionType.Move:
                 // _txt.actionText.text = "Selected Action: Move";
