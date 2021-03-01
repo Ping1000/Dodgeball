@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ActionChangeButton : MonoBehaviour
-{
+public class ActionChangeButton : MonoBehaviour {
     private ActionController[] ac_list;
     [SerializeField]
 
@@ -14,21 +13,12 @@ public class ActionChangeButton : MonoBehaviour
     public Color deselectedColor;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Start() {
+
     }
 
-    public void ChangeAction(int newAction) {
-        ac_list = FindObjectsOfType<ActionController>();
-
-        foreach (ActionController ac in ac_list) {
-            ac.selectedAction = (ActionType)newAction;
-
-            ac.isWaiting = false;
-            ac.waiting = null;
-        }
-        switch ((ActionType)newAction) {
+    public void SetColors(ActionType act) {
+        switch (act) {
             case ActionType.Move:
                 moveImage.color = selectedColor;
                 throwImage.color = deselectedColor;
@@ -37,10 +27,7 @@ public class ActionChangeButton : MonoBehaviour
                 moveImage.color = deselectedColor;
                 throwImage.color = selectedColor;
                 break;
-            default:
-                return;
         }
-        SFXManager.PlayNewSound(soundType.button);
     }
 
     // Update is called once per frame

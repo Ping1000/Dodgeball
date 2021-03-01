@@ -17,7 +17,10 @@ public class PhaseController : MonoBehaviour
     [SerializeField]
     private Transform ballSpawnB;
 
+    private WinScreen winScreen;
+
     private bool canPlayRound;
+    [HideInInspector]
     public float ballTimer;
 
     private string[] ballPrefabList = {
@@ -25,7 +28,7 @@ public class PhaseController : MonoBehaviour
         "Prefabs/Foods/Food Balls/pineapple",
         "Prefabs/Foods/Food Balls/tomato",
         "Prefabs/Foods/Food Balls/cake"
-        //"Prefabs/Ball"
+        // "Prefabs/Ball"
     };
 
     // Start is called before the first frame update
@@ -37,6 +40,7 @@ public class PhaseController : MonoBehaviour
         _txt.redText.text = "Red: " + redTeam.members.Count;
         _txt.blueText.text = "Blue: " + blueTeam.members.Count;
         ballTimer = 0;
+        winScreen = GetComponent<WinScreen>();
     }
 
     // Update is called once per frame
@@ -70,18 +74,18 @@ public class PhaseController : MonoBehaviour
         int redCount = redTeam.members.Count;
         int blueCount = blueTeam.members.Count;
         _txt.redText.text = "Red: " + redCount;
-        _txt.blueText.text = "Blue: " + blueCount;
+        _txt.blueText.text = "Yellow: " + blueCount;
         if (redCount == 0 && blueCount == 0) {
             // draw
-            Debug.Log("Draw");
+            winScreen.Show("Draw!");
             canPlayRound = false;
         } else if (redCount != 0 && blueCount == 0) {
             // red wins
-            Debug.Log("Red Wins");
+            winScreen.Show("Red Wins!");
             canPlayRound = false;
         } else if (redCount == 0 && blueCount != 0) {
             // blue wins
-            Debug.Log("Blue Wins");
+            winScreen.Show("Yellow Wins!");
             canPlayRound = false;
         }
 

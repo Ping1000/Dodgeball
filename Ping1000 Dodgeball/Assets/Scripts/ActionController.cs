@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 // TODO: add "break" feature to allow people to cancel their actions
 // TODO: integrate with UI stuff to show people what they're planned action is
@@ -30,13 +31,19 @@ public class ActionController : MonoBehaviour {
     private LinkedList<CharacterAction> actionsList; 
     private bool canBuildActions;
 
+    public ActionChangeButton buttonChanger;
+
     private SmoothMovement _mover;
     //private MeshRenderer _renderer;
     private SkinnedMeshRenderer _skinnedRenderer;
     private TextManager _txt;
     private LineController _lines;
 
+
     private Animator _animController;
+    private GraphicRaycaster g_raycast;
+    private EventSystem _es;
+
 
     // public GameObject debugSpherePrefab;
     // private List<GameObject> debugSpheres;
@@ -53,8 +60,11 @@ public class ActionController : MonoBehaviour {
         _skinnedRenderer = GetComponent<SkinnedMeshRenderer>();
         _lines = GetComponent<LineController>();
         _txt = FindObjectOfType<TextManager>();
+
         _animController = GetComponent<Animator>();
-        
+
+        g_raycast = FindObjectOfType<GraphicRaycaster>();
+        _es = FindObjectOfType<EventSystem>();
 
 
         canBuildActions = false;
@@ -136,6 +146,7 @@ public class ActionController : MonoBehaviour {
         } else if (selectedAction == ActionType.Throw) {
             _lines.StartTrackingThrow();
         }
+        buttonChanger.SetColors(selectedAction);
 
         yield return new WaitForEndOfFrame();
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Backspace));
@@ -143,40 +154,50 @@ public class ActionController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Backspace)) {
             UndoMove();
         } else {
+            PointerEventData pData = new PointerEventData(_es);
+            pData.position = Input.mousePosition;
+            
+            List<RaycastResult> results = new List<RaycastResult>();
 
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, clickableMask)) { // TODO append ", clickableMask" so it only checks for collisions on things we can actually click
+            g_raycast.Raycast(pData, results);
 
-                // Debugging
-                Debug.DrawRay(ray.origin, ray.direction * 20f, Color.red, 2f);
-                Debug.Log("Hit " + hit.collider.gameObject.name);
-                //
+            if (results.Count > 0) {
+                foreach (RaycastResult r in results) {
+                    if (r.gameObject.CompareTag(moveButtonTag)) {
+                        selectedAction = ActionType.Move;
+                        buttonChanger.SetColors(selectedAction);
+                        SFXManager.PlayNewSound(soundType.button);
+                        break;
+                    } else if (r.gameObject.CompareTag(throwButtonTag)) {
+                        selectedAction = ActionType.Throw;
+                        buttonChanger.SetColors(selectedAction);
+                        SFXManager.PlayNewSound(soundType.button);
+                        break;
+                    }
+                }
+            } else {
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, clickableMask)) { // TODO append ", clickableMask" so it only checks for collisions on things we can actually click
 
-                // TODO figure out how to select different actions
-                // With current implementation, it may be easier to do a control panel first...
+                    // Debugging
+                    Debug.DrawRay(ray.origin, ray.direction * 20f, Color.red, 2f);
+                    Debug.Log("Hit " + hit.collider.gameObject.name);
+                    //
 
-                // Switch may be unneeded with this:
-                // actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
-                //if (selectedAction == ActionType.Move)
-                //{
-                //    // TODO check distance, if above threshold, set waypoint in the direction of point up to that 
-                //}
-                //numActionsSet++;
+                    // TODO figure out how to select different actions
+                    // With current implementation, it may be easier to do a control panel first...
 
-                // Maybe able to switch actions using ActionType.Select? 
-                // There's a better way to do this but currently rushed and tired
-                if (hit.collider.CompareTag(moveButtonTag)) {
-                    selectedAction = ActionType.Move;
-                    // Debug.Log("Move Button Selected!");
-                    // _txt.actionText.text = "Selected Action: Move";
-                    SFXManager.PlayNewSound(soundType.button);
-                } else if (hit.collider.CompareTag(throwButtonTag)) {
-                    selectedAction = ActionType.Throw;
-                    // Debug.Log("Throw Button Selected!");
-                    //_txt.actionText.text = "Selected Action: Throw";
-                    SFXManager.PlayNewSound(soundType.button);
-                } else {
+                    // Switch may be unneeded with this:
+                    // actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
+                    //if (selectedAction == ActionType.Move)
+                    //{
+                    //    // TODO check distance, if above threshold, set waypoint in the direction of point up to that 
+                    //}
+                    //numActionsSet++;
+
+                    // Maybe able to switch actions using ActionType.Select? 
+                    // There's a better way to do this but currently rushed and tired
                     switch (selectedAction) {
                         case ActionType.Move:
                             if (hit.collider.CompareTag(floorTag)) {
@@ -187,12 +208,12 @@ public class ActionController : MonoBehaviour {
                             }
                             break;
                         case ActionType.Throw:
-                            
+
                             actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
                             SFXManager.PlayNewSound(soundType.action);
                             numActionsSet++;
-                            
-                        break;
+                            break;
+
                         case ActionType.Catch:
                             if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) {
                                 actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
@@ -209,9 +230,10 @@ public class ActionController : MonoBehaviour {
                             Debug.LogError("Selected Action " + selectedAction + " Not Found");
                             break;
                     }
+                } else {
+                    Debug.Log("Missed a valid raycast target");
+                    // yield return null;
                 }
-            } else {
-                Debug.Log("Missed a valid raycast target");
             }
         }
         isWaiting = false;
