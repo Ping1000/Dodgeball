@@ -91,8 +91,8 @@ public class BallController : MonoBehaviour
         //}
         if (currentState == BallState.OnGround && (other.gameObject.CompareTag("Red Team") || other.gameObject.CompareTag("Blue Team")))
         {
-            /*if (other.gameObject.GetComponentInChildren<BallController>())
-                return;*/
+            if (other.gameObject.GetComponentInChildren<BallController>())
+                return;
             //if (other.gameObject.CompareTag("Red Team") || other.gameObject.CompareTag("Blue Team")) { return; }
             
             Debug.Log(this.name + " being picked up by " + gameObject.name);

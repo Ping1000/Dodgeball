@@ -15,6 +15,8 @@ public class MusicManager : MonoBehaviour
     public AudioSource lb_src;
     public AudioSource wm_src;
     public AudioSource lm_src;
+    public AudioSource win_src;
+    public AudioSource lose_src;
     [Range(0,1)]
     public float maxVolume;
     public float fadeTime;
@@ -93,11 +95,19 @@ public class MusicManager : MonoBehaviour
                 StartCoroutine(FadeIn(lb_src));
             }
         }
-        if (yourNewPlayers <= 1 && yourPlayers > 1) {
-            StartCoroutine(FadeIn(lm_src));
-        }
-        if (enemyNewPlayers <= 1 && enemyPlayers > 1) {
-            StartCoroutine(FadeIn(wm_src));
+        if (enemyNewPlayers == 0) {
+            DisableMusic();
+            StartCoroutine(PlayingEndMusic(win_src));
+        } else if (yourNewPlayers == 0) {
+            DisableMusic();
+            StartCoroutine(PlayingEndMusic(lose_src));
+        } else {
+            if (yourNewPlayers <= 1 && yourPlayers > 1) {
+                StartCoroutine(FadeIn(lm_src));
+            }
+            if (enemyNewPlayers <= 1 && enemyPlayers > 1) {
+                StartCoroutine(FadeIn(wm_src));
+            }
         }
         yourPlayers = yourNewPlayers;
         enemyPlayers = enemyNewPlayers;
@@ -106,6 +116,28 @@ public class MusicManager : MonoBehaviour
     IEnumerator FadeIn(AudioSource src) {
         for (float progress = 0; progress < fadeTime; progress += Time.deltaTime) {
             src.volume = Mathf.Lerp(0, maxVolume, progress / fadeTime);
+            yield return null;
+        }
+    }
+
+    IEnumerator PlayingEndMusic(AudioSource src) {
+        src.volume = 0;
+        src.Play();
+        for (float progress = 0; progress < fadeTime; progress += Time.deltaTime) {
+            src.volume = Mathf.Lerp(0, maxVolume, progress / fadeTime);
+            yield return null;
+        }
+    }
+
+    public void DisableMusic() {
+        foreach (AudioSource src in src_list) {
+            StartCoroutine(FadeOut(src));
+        }
+    }
+
+    IEnumerator FadeOut(AudioSource src) {
+        for (float progress = 0; progress < fadeTime; progress += Time.deltaTime) {
+            src.volume = Mathf.Lerp(maxVolume, 0, progress / fadeTime);
             yield return null;
         }
     }

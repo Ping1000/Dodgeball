@@ -97,10 +97,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   thrownBy: {fileID: 0}
-  floorTag: 
+  floorTag: Floor
   _rb: {fileID: 0}
   _collider: {fileID: 0}
-  throwSpeed: 0
+  throwSpeed: 3
 --- !u!135 &7957748802813696177
 SphereCollider:
   m_ObjectHideFlags: 0
