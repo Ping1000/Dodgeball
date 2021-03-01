@@ -134,7 +134,7 @@ public class ActionController : MonoBehaviour {
 
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity)) { // TODO append ", clickableMask" so it only checks for collisions on things we can actually click
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, clickableMask)) { // TODO append ", clickableMask" so it only checks for collisions on things we can actually click
 
                 // Debugging
                 Debug.DrawRay(ray.origin, ray.direction * 20f, Color.red, 2f);

@@ -20,6 +20,14 @@ public class PhaseController : MonoBehaviour
     private bool canPlayRound;
     public float ballTimer;
 
+    private string[] ballPrefabList = {
+        "Prefabs/Foods/Food Balls/turkey",
+        "Prefabs/Foods/Food Balls/pineapple",
+        "Prefabs/Foods/Food Balls/tomato",
+        "Prefabs/Foods/Food Balls/cake"
+        //"Prefabs/Ball"
+    };
+
     // Start is called before the first frame update
     void Start()
     {
@@ -87,7 +95,8 @@ public class PhaseController : MonoBehaviour
 
     void RespawnBalls() {
         while (balls.Count < maxBalls) {
-            GameObject newBall = (GameObject)Instantiate(Resources.Load("Prefabs/Ball"));
+            int i = Random.Range(0, ballPrefabList.Length);
+            GameObject newBall = (GameObject)Instantiate(Resources.Load(ballPrefabList[i]));
             Vector3 newBallPos = new Vector3(Random.Range(ballSpawnA.position.x, ballSpawnB.position.x),
                 ballSpawnA.position.y,
                 Random.Range(ballSpawnA.position.z, ballSpawnB.position.z));

@@ -75,11 +75,11 @@ public class BallController : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         // Debug.Log("Ball hit " + other.gameObject.name);
-        if (other.gameObject.CompareTag(floorTag)) // Hit the floor
+        /*if (other.gameObject.CompareTag(floorTag)) // Hit the floor
         {
             currentState = BallState.OnGround;
             thrownBy = null;
-        }
+        }*/
         // Maybe handle below in ActionController?
         //else if (currentState == BallState.WasThrown && !other.gameObject.CompareTag(thrownBy.tag))
         //{
@@ -89,11 +89,13 @@ public class BallController : MonoBehaviour
         //    }
             
         //}
-        else if (currentState == BallState.OnGround)
+        if (currentState == BallState.OnGround && (other.gameObject.CompareTag("Red Team") || other.gameObject.CompareTag("Blue Team")))
         {
-            if (other.gameObject.GetComponentInChildren<BallController>())
-                return;
-            Debug.Log("Ball being picked up");
+            /*if (other.gameObject.GetComponentInChildren<BallController>())
+                return;*/
+            //if (other.gameObject.CompareTag("Red Team") || other.gameObject.CompareTag("Blue Team")) { return; }
+            
+            Debug.Log(this.name + " being picked up by " + gameObject.name);
             
             currentState = BallState.IsHeld;
             _collider.enabled = false;
