@@ -81,7 +81,7 @@ public class LineController : MonoBehaviour
                 line.SetPosition(1, hitPoint);
             }
             // line.SetPosition(1, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
         if (ac.numActionsSet > oldActionsSet) {
             savedStarts.Push(startPoint);
@@ -133,7 +133,7 @@ public class LineController : MonoBehaviour
                 }
             }
             // line.SetPosition(1, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
         if (ac.numActionsSet > oldActionsSet) {
             savedStarts.Push(startPoint);
