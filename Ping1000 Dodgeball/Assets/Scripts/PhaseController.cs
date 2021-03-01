@@ -38,7 +38,7 @@ public class PhaseController : MonoBehaviour
         canPlayRound = true;
         RespawnBalls();
         _txt.redText.text = "Red: " + redTeam.members.Count;
-        _txt.blueText.text = "Blue: " + blueTeam.members.Count;
+        _txt.blueText.text = "Yellow: " + blueTeam.members.Count;
         ballTimer = 0;
         winScreen = GetComponent<WinScreen>();
     }
