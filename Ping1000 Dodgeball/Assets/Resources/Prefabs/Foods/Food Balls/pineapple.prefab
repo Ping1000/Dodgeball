@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 9124988869630548947}
   - component: {fileID: 7957748802813696177}
   - component: {fileID: 2740205658551749591}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pineapple
   m_TagString: Ball
   m_Icon: {fileID: 0}

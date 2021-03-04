@@ -71,9 +71,10 @@ public class CharacterAction
     /// <returns></returns>
     IEnumerator DoMove() {
         isActing = true;
+
+        _mover.RotateTowards(destPoint);
+        yield return new WaitUntil(() => !(_mover.isRotating));
         _mover.MoveTo(destPoint);
-        // TODO fix this, players ignoring middle waypoint for some reason
-        // or don't bc it might resolve itself with other code implemented
         yield return new WaitUntil(() => !(_mover.isMoving));
         // yield return new WaitUntil(() => Vector3.Distance(_agent.transform.position, _agent.destination) <= _agent.stoppingDistance);
         // Debug.Log("Moving complete!");

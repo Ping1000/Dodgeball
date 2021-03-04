@@ -51,6 +51,7 @@ MonoBehaviour:
   - {fileID: 8022702220686545676}
   - {fileID: 8022702219275993477}
   finishedActing: 0
+  phaseController: {fileID: 0}
   isPlanning: 0
   isActing: 0
 --- !u!1001 &6248895350184666737
@@ -129,6 +130,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Blue Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
+        type: 3}
+      propertyPath: teamTag
+      value: Blue Team
       objectReference: {fileID: 0}
     - target: {fileID: 4174507135848854909, guid: f0a66eda027c51e4b9cbb25c71a793ad,
         type: 3}

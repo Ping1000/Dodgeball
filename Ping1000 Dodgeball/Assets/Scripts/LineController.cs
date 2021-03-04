@@ -74,8 +74,11 @@ public class LineController : MonoBehaviour
         Ray ray;
         while (ac.isWaiting) {
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            // old: hit.collider.gameObject.CompareTag(ac.floorTag)
+            // old: && ((ac.clickableMask | (1 << hit.collider.gameObject.layer)) != 0)
             if (Physics.Raycast(ray, out hit, 1000) &&
-                hit.collider.gameObject.CompareTag(ac.floorTag)) {
+                (hit.collider.CompareTag(ac.floorTag) ||
+                hit.collider.CompareTag("Ball"))) {
                 hitPoint = hit.point;
                 hitPoint.y = transform.position.y;
                 line.SetPosition(1, hitPoint);

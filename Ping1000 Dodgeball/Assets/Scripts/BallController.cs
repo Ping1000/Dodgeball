@@ -69,7 +69,7 @@ public class BallController : MonoBehaviour
 
         ballList.Remove(this);
         _pc.ballTimer = Mathf.Clamp(_pc.ballTimer + lifeSpan, 0, lifeSpan);
-        Destroy(this.gameObject, lifeSpan);
+        Destroy(gameObject, lifeSpan);
     }
 
     void OnTriggerEnter(Collider other)
@@ -104,12 +104,13 @@ public class BallController : MonoBehaviour
             transform.SetPositionAndRotation(handPosition, Quaternion.identity);
         }
         else if (currentState == BallState.WasThrown && !other.gameObject.CompareTag(thrownBy.tag)) {
+            // we only really want to destroy if we hit a PLAYER, else let the timer kill it
             ActionController other_ac = other.gameObject.GetComponent<ActionController>();
             if (other_ac) {
                 other_ac.PlayerOut(thrownDirection);
+                ballList.Remove(this);
+                Destroy(gameObject);
             }
-            ballList.Remove(this);
-            Destroy(this.gameObject);
         }
     }
 

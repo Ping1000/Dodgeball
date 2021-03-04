@@ -124,6 +124,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -2328411686548971133, guid: 32682a9219c3f1f48943c35339760ec7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 32682a9219c3f1f48943c35339760ec7,
         type: 3}
       propertyPath: m_Name
@@ -131,8 +136,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 32682a9219c3f1f48943c35339760ec7,
         type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 32682a9219c3f1f48943c35339760ec7,
+        type: 3}
       propertyPath: m_TagString
       value: Ball
+      objectReference: {fileID: 0}
+    - target: {fileID: 5626175159611565448, guid: 32682a9219c3f1f48943c35339760ec7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 32682a9219c3f1f48943c35339760ec7, type: 3}

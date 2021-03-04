@@ -944,7 +944,7 @@ MonoBehaviour:
   areActionsBuilt: 0
   clickableMask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 1792
   floorTag: Red Floor
   teamTag: Red Team
   ballTag: Ball
@@ -953,6 +953,7 @@ MonoBehaviour:
   defaultMaterial: {fileID: 2100000, guid: 00ad2a51858915f49a5dc4f3d0196924, type: 2}
   selectedMaterial: {fileID: 2100000, guid: 855a00e4020ed0043a25f95292e34d98, type: 2}
   selectedAction: 0
+  buttonChanger: {fileID: 0}
   teamController: {fileID: 0}
   isWaiting: 0
   isActing: 0
@@ -968,7 +969,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9565938235b7d346809e35e1a3b3b20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throwDistanceLength: 5
+  throwDistanceLength: 1
 --- !u!95 &1659509118377059284
 Animator:
   serializedVersion: 3

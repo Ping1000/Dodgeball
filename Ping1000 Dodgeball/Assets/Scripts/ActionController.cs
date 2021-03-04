@@ -121,11 +121,9 @@ public class ActionController : MonoBehaviour {
             }
         }
 
-        _lines.ClearLines(); // move to after executing? after doing all teams? idk
-        isBuilding = false;
-        building = null;
         areActionsBuilt = true;
-        _skinnedRenderer.material = defaultMaterial;
+        _lines.ClearLines(); // move to after executing? after doing all teams? idk
+        DeselectCharacter();
         Debug.Log("Actions built.");
     }
 
@@ -200,7 +198,7 @@ public class ActionController : MonoBehaviour {
                     // There's a better way to do this but currently rushed and tired
                     switch (selectedAction) {
                         case ActionType.Move:
-                            if (hit.collider.CompareTag(floorTag)) {
+                            if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag("Ball")) {
                                 actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
 
                                 SFXManager.PlayNewSound(soundType.action);
@@ -215,16 +213,18 @@ public class ActionController : MonoBehaviour {
                             break;
 
                         case ActionType.Catch:
-                            if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) {
-                                actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
-                                numActionsSet++;
-                            }
+                            // not properly implemented
+                            //if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(teamTag)) {
+                            //    actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
+                            //    numActionsSet++;
+                            //}
                             break;
                         case ActionType.Pass:
-                            if (hit.collider.CompareTag(teamTag)) {
-                                actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
-                                numActionsSet++;
-                            }
+                            // not properly implemented
+                            //if (hit.collider.CompareTag(teamTag) && hit.collider.gameObject != gameObject) {
+                            //    actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
+                            //    numActionsSet++;
+                            //}
                             break;
                         default:
                             Debug.LogError("Selected Action " + selectedAction + " Not Found");
@@ -311,6 +311,7 @@ public class ActionController : MonoBehaviour {
         // do something visually here to indicate which character is active
         // Debug.Log("Active character: " + gameObject.name);
         _skinnedRenderer.material = selectedMaterial;
+        gameObject.layer = 2;
         switch (selectedAction) {
             case ActionType.Move:
                 // _txt.actionText.text = "Selected Action: Move";
@@ -325,11 +326,26 @@ public class ActionController : MonoBehaviour {
         canBuildActions = true;
     }
 
-    //TODO
+    /// <summary>
+    /// Called when deselecting a character. Note that this does not necessarily set
+    /// areActionsBuilt to true.
+    /// </summary>
+    public void DeselectCharacter() {
+        _skinnedRenderer.material = defaultMaterial;
+        gameObject.layer = 9;
+        isBuilding = false;
+        building = null;
+    }
+
     public void PlayerOut(Vector3 impactDir) {
         // game state blah blah blah stuff
         SFXManager.PlayNewSound(soundType.impact);
         _mover.GetKnockedOut(impactDir);
+        BallController heldBall = GetComponentInChildren<BallController>();
+        if (heldBall) {
+            teamController.phaseController.balls.Remove(heldBall);
+            Destroy(heldBall.gameObject);
+        }
         teamController.members.Remove(this);
     }
 }

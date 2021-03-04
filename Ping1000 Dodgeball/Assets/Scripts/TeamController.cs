@@ -8,9 +8,13 @@ public class TeamController : MonoBehaviour
     [HideInInspector]
     public int finishedActing;
 
+    public PhaseController phaseController;
+
     void Start() {
         isPlanning = false;
         isActing = false;
+        if (phaseController == null)
+            phaseController = FindObjectOfType<PhaseController>();
 
         // Instatiate teams here
     }
