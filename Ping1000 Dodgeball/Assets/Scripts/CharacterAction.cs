@@ -17,7 +17,6 @@ public class CharacterAction
     private SmoothMovement _mover;
     private ActionType _type;
     private Vector3 destPoint; // destination point for movement, throwing, etc
-    public float throwForce = 500f;
 
     public CharacterAction(ActionType type, SmoothMovement mover, Vector3 destPoint) {
         _type = type;
@@ -72,6 +71,7 @@ public class CharacterAction
     IEnumerator DoMove() {
         isActing = true;
 
+        SFXManager.PlayNewSound(soundType.move);
         _mover.RotateTowards(destPoint);
         yield return new WaitUntil(() => !(_mover.isRotating));
         _mover.MoveTo(destPoint);

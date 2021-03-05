@@ -6,11 +6,13 @@ using UnityEngine.SceneManagement;
 public class TitleScreenManager : MonoBehaviour
 {
     public GameObject tutorialPanel;
+    public AudioSource _src;
+    public static float srcVolume = 0.2f;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        _src.Play();
     }
 
     // Update is called once per frame

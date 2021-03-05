@@ -199,6 +199,11 @@ public class ActionController : MonoBehaviour {
                     switch (selectedAction) {
                         case ActionType.Move:
                             if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag("Ball")) {
+                                // MOVE TO BALLCONTROLLER IF WE CHANGE SYSTEM
+                                ParticleSystem ballParticle = hit.collider.GetComponentInChildren<ParticleSystem>();
+                                if (ballParticle != null)
+                                    ballParticle.Play();
+
                                 actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
 
                                 SFXManager.PlayNewSound(soundType.action);
@@ -206,6 +211,10 @@ public class ActionController : MonoBehaviour {
                             }
                             break;
                         case ActionType.Throw:
+                            ParticleSystem personParticle = hit.collider.GetComponentInChildren<ParticleSystem>();
+                            if (personParticle != null && hit.collider.gameObject.layer == 9 &&
+                                !hit.collider.CompareTag(tag))
+                                personParticle.Play();
 
                             actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
                             SFXManager.PlayNewSound(soundType.action);
@@ -312,17 +321,18 @@ public class ActionController : MonoBehaviour {
         // Debug.Log("Active character: " + gameObject.name);
         _skinnedRenderer.material = selectedMaterial;
         gameObject.layer = 2;
-        switch (selectedAction) {
-            case ActionType.Move:
-                // _txt.actionText.text = "Selected Action: Move";
-                break;
-            case ActionType.Throw:
-                // _txt.actionText.text = "Selected Action: Throw";
-                break;
-            default:
-                // _txt.actionText.text = "Seleted Action: N/A";
-                break;
-        }
+        selectedAction = ActionType.Move;
+        //switch (selectedAction) {
+        //    case ActionType.Move:
+        //        // _txt.actionText.text = "Selected Action: Move";
+        //        break;
+        //    case ActionType.Throw:
+        //        // _txt.actionText.text = "Selected Action: Throw";
+        //        break;
+        //    default:
+        //        // _txt.actionText.text = "Seleted Action: N/A";
+        //        break;
+        //}
         canBuildActions = true;
     }
 

@@ -37,11 +37,17 @@ public class SmoothMovement : MonoBehaviour
         float distCovered;
         float journeyLength = Vector3.Distance(startPos, dest);
         float fractionOfJourney = 0;
+        bool playedHalfSound = false;
 
         while (fractionOfJourney < 0.95f) {
             distCovered = (Time.time - startTime) * moveSpeed;
 
             fractionOfJourney = distCovered / journeyLength;
+            if (!playedHalfSound && journeyLength > 1 && 
+                fractionOfJourney >= 0.5f) {
+                playedHalfSound = true;
+                SFXManager.PlayNewSound(soundType.move);
+            }
 
             transform.position = Vector3.Lerp(startPos, dest, fractionOfJourney);
             yield return new WaitForEndOfFrame();
@@ -64,7 +70,7 @@ public class SmoothMovement : MonoBehaviour
 
         Quaternion lookRotation = Quaternion.LookRotation(direction);
 
-        while (!QuaternionApprox(transform.rotation, lookRotation, 0.005f)) {
+        while (!QuaternionApprox(transform.rotation, lookRotation, 0.0025f)) {
             transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation,
                 Time.deltaTime * rotateSpeed);
             yield return new WaitForEndOfFrame();
@@ -82,7 +88,7 @@ public class SmoothMovement : MonoBehaviour
         _body.isKinematic = false;
         _body.constraints = RigidbodyConstraints.None;
 
-        impactDir.y = 1;
+        impactDir.y = 1f;
 
         // add some ragdoll stuff with like randomness in the direction? and scaling?
         _body.AddForce(Vector3.Scale(impactDir, new Vector3(500, 500, 500)));
