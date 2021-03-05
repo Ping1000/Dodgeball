@@ -18,7 +18,7 @@ public class MusicManager : MonoBehaviour
     public AudioSource win_src;
     public AudioSource lose_src;
     [Range(0,1)]
-    public float maxVolume;
+    public static float maxVolume = 0.25f;
     public float fadeTime;
 
     private AudioSource[] src_list;

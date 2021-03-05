@@ -27,8 +27,7 @@ public class BallController : MonoBehaviour
         IsHeld
     }
     // Start is called before the first frame update
-    void Awake()
-    {
+    void Start() {
         currentState = BallState.OnGround;
         _rb = GetComponent<Rigidbody>();
         _collider = GetComponent<Collider>();
@@ -89,19 +88,10 @@ public class BallController : MonoBehaviour
         //    }
             
         //}
-        if (currentState == BallState.OnGround && (other.gameObject.CompareTag("Red Player") || other.gameObject.CompareTag("Blue Player")))
+        // if (currentState == BallState.OnGround && (other.gameObject.CompareTag("Red Player") || other.gameObject.CompareTag("Blue Player")))
+        if (currentState == BallState.OnGround && other.gameObject.layer == 9)
         {
-            if (other.gameObject.GetComponentInChildren<BallController>())
-                return;
-            //if (other.gameObject.CompareTag("Red Team") || other.gameObject.CompareTag("Blue Team")) { return; }
-
-            Debug.Log(this.name + " being picked up by " + gameObject.name);
-            
-            currentState = BallState.IsHeld;
-            _collider.enabled = false;
-            transform.SetParent(other.gameObject.GetComponent<Transform>());
-            Vector3 handPosition = other.gameObject.transform.Find("Hands").position;
-            transform.SetPositionAndRotation(handPosition, Quaternion.identity);
+            PickUp(other);
         }
         else if (currentState == BallState.WasThrown && !other.gameObject.CompareTag(thrownBy.tag)) {
             // we only really want to destroy if we hit a PLAYER, else let the timer kill it
@@ -112,6 +102,20 @@ public class BallController : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+    }
+
+    void PickUp(Collider other) {
+        if (other.gameObject.GetComponentInChildren<BallController>())
+            return;
+        //if (other.gameObject.CompareTag("Red Team") || other.gameObject.CompareTag("Blue Team")) { return; }
+
+        Debug.Log(this.name + " being picked up by " + gameObject.name);
+
+        currentState = BallState.IsHeld;
+        _collider.enabled = false;
+        transform.SetParent(other.gameObject.GetComponent<Transform>());
+        Vector3 handPosition = other.gameObject.transform.Find("Hands").position;
+        transform.SetPositionAndRotation(handPosition, Quaternion.identity);
     }
 
  /*   void OnTriggerEnter(Collider collider)
