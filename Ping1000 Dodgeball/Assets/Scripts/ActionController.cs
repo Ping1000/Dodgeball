@@ -31,6 +31,8 @@ public class ActionController : MonoBehaviour {
     private LinkedList<CharacterAction> actionsList; 
     private bool canBuildActions;
 
+    public float maxDistance = 3f;
+
     public ActionChangeButton buttonChanger;
 
     private SmoothMovement _mover;
@@ -43,6 +45,8 @@ public class ActionController : MonoBehaviour {
     private Animator _animController;
     private GraphicRaycaster g_raycast;
     private EventSystem _es;
+
+    Vector3 lastPosition;
 
 
     // public GameObject debugSpherePrefab;
@@ -66,6 +70,7 @@ public class ActionController : MonoBehaviour {
         g_raycast = FindObjectOfType<GraphicRaycaster>();
         _es = FindObjectOfType<EventSystem>();
 
+        lastPosition = this.transform.position;
 
         canBuildActions = false;
         isBuilding = false;
@@ -183,19 +188,7 @@ public class ActionController : MonoBehaviour {
                     Debug.Log("Hit " + hit.collider.gameObject.name);
                     //
 
-                    // TODO figure out how to select different actions
-                    // With current implementation, it may be easier to do a control panel first...
-
-                    // Switch may be unneeded with this:
-                    // actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
-                    //if (selectedAction == ActionType.Move)
-                    //{
-                    //    // TODO check distance, if above threshold, set waypoint in the direction of point up to that 
-                    //}
-                    //numActionsSet++;
-
-                    // Maybe able to switch actions using ActionType.Select? 
-                    // There's a better way to do this but currently rushed and tired
+                  
                     switch (selectedAction) {
                         case ActionType.Move:
                             if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag("Ball")) {
@@ -204,7 +197,17 @@ public class ActionController : MonoBehaviour {
                                 if (ballParticle != null)
                                     ballParticle.Play();
 
-                                actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
+
+                                Vector3 dir = hit.point - lastPosition;
+                                dir.y = 0f;
+                                if (dir.magnitude > maxDistance)
+                                {
+                                    dir.Normalize();
+                                    dir.Scale(new Vector3(maxDistance, 0, maxDistance));
+                                }
+                                
+                                actionsList.AddLast(new CharacterAction(selectedAction, _mover, lastPosition + dir));
+                                lastPosition += dir;
 
                                 SFXManager.PlayNewSound(soundType.action);
                                 numActionsSet++;

@@ -14,6 +14,7 @@ public class LineController : MonoBehaviour
     private Vector3 startPoint;
 
     public float throwDistanceLength;
+    public float moveDistanceLength = 3f;
 
     // Start is called before the first frame update
     void Start()
@@ -81,7 +82,21 @@ public class LineController : MonoBehaviour
                 hit.collider.CompareTag("Ball"))) {
                 hitPoint = hit.point;
                 hitPoint.y = transform.position.y;
-                line.SetPosition(1, hitPoint);
+
+                if (Vector3.Distance(startPoint, hitPoint) > moveDistanceLength)
+                {
+                    Vector3 dir = new Vector3(hitPoint.x - startPoint.x,
+                        0, hitPoint.z - startPoint.z);
+                    dir.Normalize();
+                    dir.Scale(new Vector3(moveDistanceLength, 0, moveDistanceLength));
+                    line.SetPosition(1, startPoint + dir);
+                }
+                else
+                {
+                    line.SetPosition(1, hitPoint);
+                }
+
+                
             }
             // line.SetPosition(1, Camera.main.ScreenToWorldPoint(Input.mousePosition));
             yield return null;
@@ -89,8 +104,8 @@ public class LineController : MonoBehaviour
         if (ac.numActionsSet > oldActionsSet) {
             savedStarts.Push(startPoint);
             lines.Push(line);
-            if (hitPoint != Vector3.zero)
-                startPoint = hitPoint;
+            //if (hitPoint != Vector3.zero)
+            //    startPoint = hitPoint;
         } else {
             Destroy(line.gameObject);
         }
