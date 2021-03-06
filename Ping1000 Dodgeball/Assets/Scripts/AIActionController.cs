@@ -16,6 +16,8 @@ public class AIActionController : ActionController
     private bool willHoldBall;
     [Range(0,1)]
     public float throwChance;
+    [Range(0,10)]
+    public float inaccuracySize;
     // public float throwArc;
 
     // Start is called before the first frame update
@@ -114,7 +116,11 @@ public class AIActionController : ActionController
         }
         if (throwDest == Vector3.zero)
             throwDest = targetPlayer.transform.position;
-        // want to add variance but since it's in CharacterAction i'm not gonna bother yet
+        // naive variance
+        float offsetX = Random.Range(-1 * inaccuracySize, inaccuracySize);
+        float offsetZ = Random.Range(-1 * inaccuracySize, inaccuracySize);
+        throwDest.x += offsetX;
+        throwDest.z += offsetZ;
         actionsList.AddLast(new CharacterAction(ActionType.Throw, _mover, throwDest));
         numActionsSet++;
         willHoldBall = false;

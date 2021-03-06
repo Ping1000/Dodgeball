@@ -951,6 +951,7 @@ MonoBehaviour:
   backLeft: {fileID: 0}
   backRight: {fileID: 0}
   throwChance: 0.5
+  inaccuracySize: 1
 --- !u!114 &4174507135848854909
 MonoBehaviour:
   m_ObjectHideFlags: 0
