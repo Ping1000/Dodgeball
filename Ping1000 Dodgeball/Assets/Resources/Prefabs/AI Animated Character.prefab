@@ -748,8 +748,6 @@ GameObject:
   - component: {fileID: 6428640651711074502}
   - component: {fileID: 9038555271889627520}
   - component: {fileID: 5967040065755549610}
-  - component: {fileID: 4174507135848854909}
-  - component: {fileID: 2990088515874236562}
   - component: {fileID: 1659509118377059284}
   m_Layer: 0
   m_Name: characterMedium
@@ -950,47 +948,9 @@ MonoBehaviour:
   frontRight: {fileID: 0}
   backLeft: {fileID: 0}
   backRight: {fileID: 0}
-  throwChance: 0.5
+  throwChance: 0.6667
+  getFoodChance: 0.6667
   inaccuracySize: 1
---- !u!114 &4174507135848854909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3510317425493923403}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d339921b569cb1742bbb156b8254f79e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  numActions: 3
-  teamTag: Red Team
-  ballTag: Ball
-  teamController: {fileID: 0}
-  clickableMask:
-    serializedVersion: 2
-    m_Bits: 1792
-  floorTag: Red Floor
-  moveButtonTag: Move Button
-  throwButtonTag: Throw Button
-  defaultMaterial: {fileID: 2100000, guid: 00ad2a51858915f49a5dc4f3d0196924, type: 2}
-  selectedMaterial: {fileID: 2100000, guid: 855a00e4020ed0043a25f95292e34d98, type: 2}
-  buttonChanger: {fileID: 0}
-  isWaiting: 0
---- !u!114 &2990088515874236562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3510317425493923403}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9565938235b7d346809e35e1a3b3b20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  throwDistanceLength: 1
 --- !u!95 &1659509118377059284
 Animator:
   serializedVersion: 3

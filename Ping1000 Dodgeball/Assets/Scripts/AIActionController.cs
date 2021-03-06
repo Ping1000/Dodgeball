@@ -16,6 +16,8 @@ public class AIActionController : ActionController
     private bool willHoldBall;
     [Range(0,1)]
     public float throwChance;
+    [Range(0,1)]
+    public float getFoodChance;
     [Range(0,10)]
     public float inaccuracySize;
     // public float throwArc;
@@ -63,11 +65,12 @@ public class AIActionController : ActionController
             otherPlayers = UpdateOtherPlayerList();
 
         for (numActionsSet = 0; numActionsSet < numActions;) {
-            if (numActionsSet == 0 && !willHoldBall && balls.Count > 0) {
-                AddGetBallAction();
-            } else {
-                BuildAction();
-            }
+            BuildAction();
+            //if (numActionsSet == 0 && !willHoldBall && balls.Count > 0) {
+            //    AddGetBallAction();
+            //} else {
+            //    BuildAction();
+            //}
             yield return new WaitForEndOfFrame();
         }
 
@@ -86,16 +89,16 @@ public class AIActionController : ActionController
     }
 
     void BuildAction() {
-        float roll = Random.value;
+        float throwRoll = Random.value;
+        float getFoodRoll = Random.value;
         if (willHoldBall) {
-            if (roll < throwChance) {
+            if (throwRoll < throwChance) {
                 AddThrowAction();
             } else {
                 AddMoveAction();
             }
         } else {
-            // might need to add a "getBallChance," for now, always greedy
-            if (balls.Count > 0) {
+            if (balls.Count > 0 && getFoodRoll < getFoodChance) {
                 AddGetBallAction();
             } else {
                 AddMoveAction();
