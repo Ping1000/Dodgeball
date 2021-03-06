@@ -15,12 +15,6 @@ public class TitleScreenManager : MonoBehaviour
         _src.Play();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void LoadSinglePlayer() {
         SceneManager.LoadScene(1);
     }

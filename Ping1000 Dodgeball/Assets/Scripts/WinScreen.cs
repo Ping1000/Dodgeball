@@ -29,10 +29,4 @@ public class WinScreen : MonoBehaviour
     public void GotoMainMenu() {
         SceneManager.LoadScene(0);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

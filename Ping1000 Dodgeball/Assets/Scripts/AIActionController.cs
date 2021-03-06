@@ -2,43 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIActionController : MonoBehaviour
+[RequireComponent(typeof(SmoothMovement))]
+public class AIActionController : ActionController
 {
-    public uint numActions;
-    [HideInInspector]
-    public int numActionsSet { get; private set; }
-    [HideInInspector]
-    public bool areActionsBuilt;
-
-    public string teamTag;
-    public string ballTag;
-    public Material defaultMaterial;
-    public Material seletedMaterial;
     public Transform frontLeft;
     public Transform frontRight;
     public Transform backLeft;
     public Transform backRight;
-    [HideInInspector]
-    public ActionType selectedAction;
-    private LinkedList<CharacterAction> actionsList;
-    private bool canBuildActions;
-
-    public ActionChangeButton buttonChanger;
-
-    private SmoothMovement _mover;
-    private SkinnedMeshRenderer _skinnedRenderer;
-    private TextManager _txt;
-
-    private Animator _animController;
-
-    [SerializeField]
-    private TeamController teamController;
-
 
     private static List<BallController> balls;
     private static List<ActionController> otherPlayers;
     private bool willBeInFront; // not back, not on ball
     private bool willHoldBall;
+    [Range(0,1)]
     public float throwChance;
     // public float throwArc;
 
@@ -49,8 +25,6 @@ public class AIActionController : MonoBehaviour
         _mover = GetComponent<SmoothMovement>();
         _skinnedRenderer = GetComponent<SkinnedMeshRenderer>();
         _animController = GetComponent<Animator>();
-
-        _txt = FindObjectOfType<TextManager>();
 
         canBuildActions = false;
         isBuilding = false;
@@ -76,11 +50,10 @@ public class AIActionController : MonoBehaviour
         }
     }
 
-    [HideInInspector]
-    public bool isBuilding;
     Coroutine building;
     IEnumerator BuildingActions() {
         isBuilding = true;
+        canBuildActions = false;
 
         if (balls == null)
             balls = UpdateBallList();
@@ -90,12 +63,14 @@ public class AIActionController : MonoBehaviour
         for (numActionsSet = 0; numActionsSet < numActions;) {
             if (numActionsSet == 0 && !willHoldBall && balls.Count > 0) {
                 AddGetBallAction();
-                numActionsSet++;
             } else {
                 BuildAction();
             }
             yield return new WaitForEndOfFrame();
         }
+
+        building = null;
+        areActionsBuilt = true;
         isBuilding = false;
     }
 
@@ -185,7 +160,7 @@ public class AIActionController : MonoBehaviour
         return otherPlayers;
     }
 
-    public void ExecuteActions() {
+    public override void ExecuteActions() {
         balls = null;
         otherPlayers = null;
         if (areActionsBuilt) {
@@ -193,30 +168,36 @@ public class AIActionController : MonoBehaviour
         }
     }
 
-    [HideInInspector]
-    public bool isActing;
-
     IEnumerator ExecutingActions() {
         isActing = true;
 
-        isActing = false;
-    }
-
-    public void SelectCharacter() {
-        selectedAction = ActionType.Move;
-
-        canBuildActions = true;
-    }
-
-    public void PlayerOut(Vector3 impactDir) {
-        // game state blah blah blah stuff
-        SFXManager.PlayNewSound(soundType.impact);
-        _mover.GetKnockedOut(impactDir);
-        BallController heldBall = GetComponentInChildren<BallController>();
-        if (heldBall) {
-            teamController.phaseController.balls.Remove(heldBall);
-            Destroy(heldBall.gameObject);
+        while (actionsList.Count > 0) {
+            CharacterAction action = actionsList.First.Value;
+            if (action.GetActionType() == ActionType.Move) {
+                _animController.SetBool("isRunning", true);
+            } else if (action.GetActionType() == ActionType.Throw) {
+                _animController.SetBool("isThrowing", true);
+            }
+            action.DoAction();
+            yield return new WaitUntil(() => !(action.isActing));
+            if (action.GetActionType() == ActionType.Move) {
+                _animController.SetBool("isRunning", false);
+            } else if (action.GetActionType() == ActionType.Throw) {
+                _animController.SetBool("isThrowing", false);
+            }
+            actionsList.RemoveFirst();
         }
-        teamController.members.Remove(this);
+
+        actionsList = new LinkedList<CharacterAction>();
+        canBuildActions = false;
+        isBuilding = false;
+        isActing = false;
+        areActionsBuilt = false;
+
+        teamController.finishedActing++;
+    }
+
+    public override void SelectCharacter() {
+        canBuildActions = true;
     }
 }

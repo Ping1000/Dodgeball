@@ -10,7 +10,7 @@ public class LineController : MonoBehaviour
 {
     private Stack<Vector3> savedStarts;
     private Stack<LineRenderer> lines;
-    private ActionController ac;
+    private PlayerActionController ac;
     private Vector3 startPoint;
 
     public float throwDistanceLength;
@@ -20,14 +20,8 @@ public class LineController : MonoBehaviour
     {
         savedStarts = new Stack<Vector3>();
         lines = new Stack<LineRenderer>();
-        ac = GetComponent<ActionController>();
+        ac = GetComponent<PlayerActionController>();
         startPoint = transform.position; // will need to reset when the planning ends
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void ClearRecentLine() {

@@ -19,15 +19,6 @@ public class TeamController : MonoBehaviour
         // Instatiate teams here
     }
 
-    void Update() {
-        // TESTING
-        //if (Input.GetKeyDown(KeyCode.Space)) {
-        //    BeginPlanPhase();
-        //} else if (Input.GetKeyDown(KeyCode.Return)) {
-        //    BeginActionPhase();
-        //}
-    }
-
     public void BeginPlanPhase() {
         StartCoroutine(PlanningPhase());
     }
