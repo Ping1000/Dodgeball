@@ -28,7 +28,7 @@ public class ActionController : MonoBehaviour {
     public Material selectedMaterial;
     [HideInInspector]
     public ActionType selectedAction;
-    private LinkedList<CharacterAction> actionsList; 
+    public LinkedList<CharacterAction> actionsList { get; private set; } 
     private bool canBuildActions;
 
     public ActionChangeButton buttonChanger;
