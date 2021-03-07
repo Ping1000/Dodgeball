@@ -837,6 +837,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b1db70d18b6fe6a4e8ea452cc8505e6f, type: 3}
   actionSounds:
   - {fileID: 8300000, guid: 24da05b05a6422f4fbfe2a34e152bbe9, type: 3}
+  undoSound: {fileID: 8300000, guid: e0a2652edb5daf04c81cf7c1ca58c453, type: 3}
+  cantClickSound: {fileID: 8300000, guid: e5fd12783d8842049ab861dbab5360df, type: 3}
   moveSounds:
   - {fileID: 8300000, guid: 4d10169df21df9648b3e24ff20f1804a, type: 3}
   - {fileID: 8300000, guid: 74c56e15540161643a5f9614501fcafe, type: 3}

@@ -191,15 +191,16 @@ public class PlayerActionController : ActionController {
                             }
                             if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag("Ball")) {
                                 // MOVE TO BALLCONTROLLER IF WE CHANGE SYSTEM
-                                ParticleSystem ballParticle = hit.collider.GetComponentInChildren<ParticleSystem>();
-                                if (ballParticle != null)
-                                    ballParticle.Play();
 
                                 Vector3 dir = hit.point - lastPosition;
                                 dir.y = 0f;
                                 if (dir.magnitude > maxDistance) {
                                     dir.Normalize();
                                     dir.Scale(new Vector3(maxDistance, 0, maxDistance));
+                                } else {
+                                    ParticleSystem ballParticle = hit.collider.GetComponentInChildren<ParticleSystem>();
+                                    if (ballParticle != null)
+                                        ballParticle.Play();
                                 }
 
                                 actionsList.AddLast(new CharacterAction(selectedAction, _mover, lastPosition + dir));
@@ -257,6 +258,7 @@ public class PlayerActionController : ActionController {
             actionsList.RemoveLast();
             numActionsSet--;
             _lines.ClearRecentLine();
+            SFXManager.PlayNewSound(soundType.undo);
         }
     }
 

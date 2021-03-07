@@ -15,11 +15,11 @@ public class AIActionController : ActionController
     private bool willBeInFront; // not back, not on ball
     private bool willHoldBall;
     [Range(0,1)]
-    public float throwChance;
+    public static float throwChance = 0.8f;
     [Range(0,1)]
-    public float getFoodChance;
+    public static float getFoodChance = 0.8f;
     [Range(0,10)]
-    public float inaccuracySize;
+    public static float inaccuracySize = 1f;
     // public float throwArc;
 
     // Start is called before the first frame update

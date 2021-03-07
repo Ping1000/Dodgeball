@@ -7,7 +7,9 @@ public enum soundType {
     impact,
     button,
     action,
-    move
+    move,
+    undo,
+    cantClick
 }
 
 public class SFXManager : MonoBehaviour
@@ -15,15 +17,17 @@ public class SFXManager : MonoBehaviour
     public static SFXManager instance;
 
     public List<AudioClip> throwSounds;
-    public static float throwVolume = 1f;
+    public static float throwVolume = .75f;
     public List<AudioClip> impactSounds;
     public static float impactVolume = .5f;
     public List<AudioClip> buttonSounds;
     public static float buttonVolume = .5f;
     public List<AudioClip> actionSounds;
+    public AudioClip undoSound;
+    public AudioClip cantClickSound;
     public static float actionVolume = .5f;
     public List<AudioClip> moveSounds;
-    public static float moveVolume = .2f;
+    public static float moveVolume = .25f;
 
     private void Awake() {
         instance = this;
@@ -49,6 +53,14 @@ public class SFXManager : MonoBehaviour
                 break;
             case soundType.action:
                 ac = instance.actionSounds[Random.Range(0, instance.actionSounds.Count)];
+                playerSrc.volume = actionVolume;
+                break;
+            case soundType.undo:
+                ac = instance.undoSound;
+                playerSrc.volume = actionVolume;
+                break;
+            case soundType.cantClick:
+                ac = instance.cantClickSound;
                 playerSrc.volume = actionVolume;
                 break;
             case soundType.move:
