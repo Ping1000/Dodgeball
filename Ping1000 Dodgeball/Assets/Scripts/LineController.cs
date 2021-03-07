@@ -41,6 +41,7 @@ public class LineController : MonoBehaviour
             Destroy(lines.Pop().gameObject);
             savedStarts.Pop();
         }
+        startPoint = transform.position;
     }
 
     /// <summary>
