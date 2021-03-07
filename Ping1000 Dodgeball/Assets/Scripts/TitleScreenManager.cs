@@ -5,9 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class TitleScreenManager : MonoBehaviour
 {
+    public GameObject mainPanel;
+    public GameObject singlePlayerPanel;
+    public GameObject optionsPanel;
     public GameObject tutorialPanel;
     public AudioSource _src;
-    public static float srcVolume = 0.2f;
+    public static float srcVolume = 0.25f;
 
     // Start is called before the first frame update
     void Start()
@@ -21,11 +24,20 @@ public class TitleScreenManager : MonoBehaviour
         
     }
 
-    public void LoadSinglePlayer() {
-        SceneManager.LoadScene(1);
+    public void ToggleSinglePlayerMenu() {
+        mainPanel.SetActive(!mainPanel.activeInHierarchy);
+        singlePlayerPanel.SetActive(!singlePlayerPanel.activeInHierarchy);
+    }
+
+    public void LoadScene(int buildIndex) {
+        SceneManager.LoadScene(buildIndex);
     }
 
     public void ToggleTutorial(bool show) {
         tutorialPanel.SetActive(show);
+    }
+
+    public void SetVolume(float value) {
+
     }
 }
