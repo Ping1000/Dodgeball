@@ -168,6 +168,9 @@ public class PlayerActionController : ActionController {
 
                     switch (selectedAction) {
                         case ActionType.Move:
+                            if (hit.collider.CompareTag(tag)) {
+
+                            }
                             if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag("Ball")) {
                                 // MOVE TO BALLCONTROLLER IF WE CHANGE SYSTEM
                                 ParticleSystem ballParticle = hit.collider.GetComponentInChildren<ParticleSystem>();
