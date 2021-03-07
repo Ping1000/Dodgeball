@@ -37,6 +37,13 @@ public class TeamController : MonoBehaviour
             }
         }
 
+        foreach (ActionController m in members) {
+            if (m != null) {
+                LineController playerLine = m.GetComponent<LineController>();
+                if (playerLine != null)
+                    playerLine.ClearLines();
+            }
+        }
 
         Debug.Log("Planning phase complete.");
         isPlanning = false;

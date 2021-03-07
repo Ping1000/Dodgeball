@@ -100,7 +100,7 @@ public class PlayerActionController : ActionController {
         }
 
         areActionsBuilt = true;
-        _lines.ClearLines(); // move to after executing? after doing all teams? idk
+        // _lines.ClearLines(); // move to after executing? after doing all teams? idk
         DeselectCharacter();
         Debug.Log("Actions built.");
     }
