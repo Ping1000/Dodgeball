@@ -19,15 +19,6 @@ public class TeamController : MonoBehaviour
         // Instatiate teams here
     }
 
-    void Update() {
-        // TESTING
-        //if (Input.GetKeyDown(KeyCode.Space)) {
-        //    BeginPlanPhase();
-        //} else if (Input.GetKeyDown(KeyCode.Return)) {
-        //    BeginActionPhase();
-        //}
-    }
-
     public void BeginPlanPhase() {
         StartCoroutine(PlanningPhase());
     }
@@ -46,6 +37,13 @@ public class TeamController : MonoBehaviour
             }
         }
 
+        foreach (ActionController m in members) {
+            if (m != null) {
+                LineController playerLine = m.GetComponent<LineController>();
+                if (playerLine != null)
+                    playerLine.ClearLines();
+            }
+        }
 
         Debug.Log("Planning phase complete.");
         isPlanning = false;

@@ -16,7 +16,7 @@ public class CharacterAction
 {
     private SmoothMovement _mover;
     private ActionType _type;
-    private Vector3 destPoint; // destination point for movement, throwing, etc
+    public Vector3 destPoint { get; private set; } // destination point for movement, throwing, etc
 
     public CharacterAction(ActionType type, SmoothMovement mover, Vector3 destPoint) {
         _type = type;

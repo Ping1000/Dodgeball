@@ -29,10 +29,4 @@ public class ActionChangeButton : MonoBehaviour {
                 break;
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

@@ -94,10 +94,4 @@ public class SmoothMovement : MonoBehaviour
         _body.AddForce(Vector3.Scale(impactDir, new Vector3(500, 500, 500)));
         Destroy(this.gameObject, 5); // FIX THIS TO WAIT UNTIL AFTER ACTING IS FINISHED
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
