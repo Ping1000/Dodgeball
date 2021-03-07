@@ -16,8 +16,7 @@ public class PlayerActionController : ActionController {
     public string floorTag;
     public string moveButtonTag;
     public string throwButtonTag;
-    public Material defaultMaterial;
-    public Material selectedMaterial;
+    public GameObject selectedArrow;
 
     public ActionChangeButton buttonChanger;
 
@@ -302,7 +301,7 @@ public class PlayerActionController : ActionController {
     public override void SelectCharacter() {
         // do something visually here to indicate which character is active
         // Debug.Log("Active character: " + gameObject.name);
-        _skinnedRenderer.material = selectedMaterial;
+        selectedArrow.SetActive(true);
         gameObject.layer = 2;
         selectedAction = ActionType.Move;
         //switch (selectedAction) {
@@ -324,7 +323,7 @@ public class PlayerActionController : ActionController {
     /// areActionsBuilt to true.
     /// </summary>
     public void DeselectCharacter() {
-        _skinnedRenderer.material = defaultMaterial;
+        selectedArrow.SetActive(false);
         gameObject.layer = 9;
         isBuilding = false;
         building = null;
