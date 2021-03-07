@@ -942,22 +942,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numActions: 3
-  areActionsBuilt: 0
+  teamTag: Red Team
+  ballTag: Ball
+  teamController: {fileID: 0}
   clickableMask:
     serializedVersion: 2
     m_Bits: 1792
   floorTag: Red Floor
-  teamTag: Red Team
-  ballTag: Ball
   moveButtonTag: Move Button
   throwButtonTag: Throw Button
   defaultMaterial: {fileID: 2100000, guid: 00ad2a51858915f49a5dc4f3d0196924, type: 2}
   selectedMaterial: {fileID: 2100000, guid: 855a00e4020ed0043a25f95292e34d98, type: 2}
-  selectedAction: 0
   buttonChanger: {fileID: 0}
-  teamController: {fileID: 0}
+  maxDistance: 2
   isWaiting: 0
-  isActing: 0
 --- !u!114 &2990088515874236562
 MonoBehaviour:
   m_ObjectHideFlags: 0

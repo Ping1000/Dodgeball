@@ -27,6 +27,9 @@ public class PlayerActionController : ActionController {
     private GraphicRaycaster g_raycast;
     private EventSystem _es;
 
+    public float maxDistance = 2f;
+    Vector3 lastPosition;
+    Stack<Vector3> savedStarts;
 
     // public GameObject debugSpherePrefab;
     // private List<GameObject> debugSpheres;
@@ -54,6 +57,9 @@ public class PlayerActionController : ActionController {
 
         selectedAction = ActionType.Move; // TODO un-hardcode this
         numActionsSet = 0;
+
+        savedStarts = new Stack<Vector3>();
+        lastPosition = transform.position;
 
         // TESTING
         // debugSpheres = new List<GameObject>();
@@ -159,21 +165,7 @@ public class PlayerActionController : ActionController {
                     // Debugging
                     Debug.DrawRay(ray.origin, ray.direction * 20f, Color.red, 2f);
                     Debug.Log("Hit " + hit.collider.gameObject.name);
-                    //
 
-                    // TODO figure out how to select different actions
-                    // With current implementation, it may be easier to do a control panel first...
-
-                    // Switch may be unneeded with this:
-                    // actionsQueue.Enqueue(new CharacterAction(selectedAction, this, _agent, hit.point));
-                    //if (selectedAction == ActionType.Move)
-                    //{
-                    //    // TODO check distance, if above threshold, set waypoint in the direction of point up to that 
-                    //}
-                    //numActionsSet++;
-
-                    // Maybe able to switch actions using ActionType.Select? 
-                    // There's a better way to do this but currently rushed and tired
                     switch (selectedAction) {
                         case ActionType.Move:
                             if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag("Ball")) {
@@ -182,7 +174,16 @@ public class PlayerActionController : ActionController {
                                 if (ballParticle != null)
                                     ballParticle.Play();
 
-                                actionsList.AddLast(new CharacterAction(selectedAction, _mover, hit.point));
+                                Vector3 dir = hit.point - lastPosition;
+                                dir.y = 0f;
+                                if (dir.magnitude > maxDistance) {
+                                    dir.Normalize();
+                                    dir.Scale(new Vector3(maxDistance, 0, maxDistance));
+                                }
+
+                                actionsList.AddLast(new CharacterAction(selectedAction, _mover, lastPosition + dir));
+                                savedStarts.Push(lastPosition);
+                                lastPosition += dir;
 
                                 SFXManager.PlayNewSound(soundType.action);
                                 numActionsSet++;
@@ -232,6 +233,7 @@ public class PlayerActionController : ActionController {
             actionsList.RemoveLast();
             numActionsSet--;
             _lines.ClearRecentLine();
+            lastPosition = savedStarts.Pop();
         }
     }
 
@@ -276,6 +278,8 @@ public class PlayerActionController : ActionController {
 
         // reset variables when done
         actionsList = new LinkedList<CharacterAction>(); // should be garbage collected, right? // God I hope so
+        savedStarts = new Stack<Vector3>();
+        lastPosition = transform.position;
         canBuildActions = false;
         isBuilding = false;
         isWaiting = false;
