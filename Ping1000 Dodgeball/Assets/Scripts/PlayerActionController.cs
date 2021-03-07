@@ -16,8 +16,7 @@ public class PlayerActionController : ActionController {
     public string floorTag;
     public string moveButtonTag;
     public string throwButtonTag;
-    public Material defaultMaterial;
-    public Material selectedMaterial;
+    public GameObject selectedArrow;
 
     public ActionChangeButton buttonChanger;
 
@@ -106,6 +105,8 @@ public class PlayerActionController : ActionController {
         }
 
         areActionsBuilt = true;
+        teamController.membersBuilt++;
+        teamController.SelectNewMember();
         // _lines.ClearLines(); // move to after executing? after doing all teams? idk
         DeselectCharacter();
         Debug.Log("Actions built.");
@@ -168,6 +169,26 @@ public class PlayerActionController : ActionController {
 
                     switch (selectedAction) {
                         case ActionType.Move:
+                            if (hit.collider.CompareTag(tag)) {
+                                ActionController otherAc = hit.collider.GetComponent<ActionController>();
+                                if (otherAc != null) {
+                                    // switch to other character
+                                    // delete all saved actions
+                                    _lines.ClearLines();
+                                    ResetActionVariables();
+                                    areActionsBuilt = false;
+
+                                    // deselect this character
+                                    DeselectCharacter();
+                                    if (otherAc.areActionsBuilt) {
+                                        teamController.membersBuilt--;
+                                    }
+                                    otherAc.SelectCharacter();
+
+                                    // stop all coroutines
+                                    StopAllCoroutines();
+                                }
+                            }
                             if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag("Ball")) {
                                 // MOVE TO BALLCONTROLLER IF WE CHANGE SYSTEM
                                 ParticleSystem ballParticle = hit.collider.GetComponentInChildren<ParticleSystem>();
@@ -230,10 +251,12 @@ public class PlayerActionController : ActionController {
 
     void UndoMove() {
         if (actionsList.Count > 0) {
+            CharacterAction last = actionsList.Last.Value;
+            if (last.GetActionType() == ActionType.Move)
+                lastPosition = savedStarts.Pop();
             actionsList.RemoveLast();
             numActionsSet--;
             _lines.ClearRecentLine();
-            lastPosition = savedStarts.Pop();
         }
     }
 
@@ -277,13 +300,7 @@ public class PlayerActionController : ActionController {
         }
 
         // reset variables when done
-        actionsList = new LinkedList<CharacterAction>(); // should be garbage collected, right? // God I hope so
-        savedStarts = new Stack<Vector3>();
-        lastPosition = transform.position;
-        canBuildActions = false;
-        isBuilding = false;
-        isWaiting = false;
-        isActing = false;
+        ResetActionVariables();
         areActionsBuilt = false;
 
         //foreach (GameObject obj in debugSpheres)
@@ -299,7 +316,8 @@ public class PlayerActionController : ActionController {
     public override void SelectCharacter() {
         // do something visually here to indicate which character is active
         // Debug.Log("Active character: " + gameObject.name);
-        _skinnedRenderer.material = selectedMaterial;
+        
+        selectedArrow.SetActive(true);
         gameObject.layer = 2;
         selectedAction = ActionType.Move;
         //switch (selectedAction) {
@@ -313,7 +331,23 @@ public class PlayerActionController : ActionController {
         //        // _txt.actionText.text = "Seleted Action: N/A";
         //        break;
         //}
+        _lines.ClearLines();
+        ResetActionVariables();
         canBuildActions = true;
+    }
+
+    /// <summary>
+    /// Reset important variables relating to building actions.
+    /// </summary>
+    void ResetActionVariables() {
+        actionsList.Clear();
+        savedStarts.Clear();
+        numActionsSet = 0;
+        lastPosition = transform.position;
+        canBuildActions = false;
+        isBuilding = false;
+        isWaiting = false;
+        isActing = false;
     }
 
     /// <summary>
@@ -321,7 +355,7 @@ public class PlayerActionController : ActionController {
     /// areActionsBuilt to true.
     /// </summary>
     public void DeselectCharacter() {
-        _skinnedRenderer.material = defaultMaterial;
+        selectedArrow.SetActive(false);
         gameObject.layer = 9;
         isBuilding = false;
         building = null;

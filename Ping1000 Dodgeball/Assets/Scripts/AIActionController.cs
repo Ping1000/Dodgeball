@@ -64,6 +64,8 @@ public class AIActionController : ActionController
         if (otherPlayers == null)
             otherPlayers = UpdateOtherPlayerList();
 
+        yield return new WaitUntil(() => balls != null && otherPlayers != null);
+
         for (numActionsSet = 0; numActionsSet < numActions;) {
             BuildAction();
             //if (numActionsSet == 0 && !willHoldBall && balls.Count > 0) {
@@ -77,6 +79,8 @@ public class AIActionController : ActionController
         building = null;
         areActionsBuilt = true;
         isBuilding = false;
+        teamController.membersBuilt++;
+        teamController.SelectNewMember();
     }
 
     public void AddGetBallAction() {
@@ -170,8 +174,6 @@ public class AIActionController : ActionController
     }
 
     public override void ExecuteActions() {
-        balls = null;
-        otherPlayers = null;
         if (areActionsBuilt) {
             StartCoroutine(ExecutingActions());
         }
@@ -197,7 +199,10 @@ public class AIActionController : ActionController
             actionsList.RemoveFirst();
         }
 
-        actionsList = new LinkedList<CharacterAction>();
+        otherPlayers = null;
+        balls = null; // hopefully this isn't a leak
+        actionsList.Clear();
+        numActionsSet = 0;
         canBuildActions = false;
         isBuilding = false;
         isActing = false;
