@@ -31,7 +31,7 @@ public class ActionController : MonoBehaviour {
     private LinkedList<CharacterAction> actionsList; 
     private bool canBuildActions;
 
-    public float maxDistance = 3f;
+    public float maxDistance = 2f;
 
     public ActionChangeButton buttonChanger;
 
@@ -47,6 +47,7 @@ public class ActionController : MonoBehaviour {
     private EventSystem _es;
 
     Vector3 lastPosition;
+    Stack<Vector3> savedStarts;
 
 
     // public GameObject debugSpherePrefab;
@@ -70,6 +71,7 @@ public class ActionController : MonoBehaviour {
         g_raycast = FindObjectOfType<GraphicRaycaster>();
         _es = FindObjectOfType<EventSystem>();
 
+        savedStarts = new Stack<Vector3>();
         lastPosition = this.transform.position;
 
         canBuildActions = false;
@@ -207,6 +209,7 @@ public class ActionController : MonoBehaviour {
                                 }
                                 
                                 actionsList.AddLast(new CharacterAction(selectedAction, _mover, lastPosition + dir));
+                                savedStarts.Push(lastPosition);
                                 lastPosition += dir;
 
                                 SFXManager.PlayNewSound(soundType.action);
@@ -257,6 +260,7 @@ public class ActionController : MonoBehaviour {
             actionsList.RemoveLast();
             numActionsSet--;
             _lines.ClearRecentLine();
+            lastPosition = savedStarts.Pop();
         }
     }
 
