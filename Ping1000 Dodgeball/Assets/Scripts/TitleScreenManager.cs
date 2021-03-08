@@ -84,7 +84,9 @@ public class TitleScreenManager : MonoBehaviour
 
     public void TweenSubmenuClose(RectTransform menu) {
         LeanTween.scale(menu, Vector3.zero, 0.5f).setEaseInBack().
-            setOnComplete(() => menu.gameObject.SetActive(false));
+            setOnComplete(() => {
+                menu.localScale = Vector3.one;
+                menu.gameObject.SetActive(false); });
     }
 
     public void LoadScene(int buildIndex) {
